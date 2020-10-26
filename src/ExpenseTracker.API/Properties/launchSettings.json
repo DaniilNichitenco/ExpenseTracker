@@ -9,7 +9,7 @@
       "sslPort": 0
     }
   },
-  "profiles": {
+  "People": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

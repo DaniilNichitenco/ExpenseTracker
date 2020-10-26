@@ -230,7 +230,7 @@ namespace ExpenseTracker.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -240,7 +240,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Notes");
                 });
@@ -262,7 +262,7 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<DateTime>("OccasionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -272,12 +272,12 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Occasions");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Profile", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -294,7 +294,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
@@ -318,12 +318,12 @@ namespace ExpenseTracker.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Purses");
 
@@ -404,27 +404,27 @@ namespace ExpenseTracker.API.Migrations
 
             modelBuilder.Entity("ExpenseTracker.Domain.Note", b =>
                 {
-                    b.HasOne("ExpenseTracker.Domain.Profile", "Profile")
+                    b.HasOne("ExpenseTracker.Domain.Person", "Person")
                         .WithMany("Notes")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Occasion", b =>
                 {
-                    b.HasOne("ExpenseTracker.Domain.Profile", "Profile")
+                    b.HasOne("ExpenseTracker.Domain.Person", "Person")
                         .WithMany("Occasions")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
                 {
-                    b.HasOne("ExpenseTracker.Domain.Profile", "Profile")
+                    b.HasOne("ExpenseTracker.Domain.Person", "Person")
                         .WithMany("Purses")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

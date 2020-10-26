@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Repositories.Implementations
 {
-    public class ProfileRepository : Repository<Domain.Profile>, IProfileRepository
+    public class PersonRepository : Repository<Domain.Person>, IPersonRepository
     {
-        public ProfileRepository(ExpenseTrackerDbContext context, IMapper mapper) : base(context, mapper)
+        public PersonRepository(ExpenseTrackerDbContext context, IMapper mapper) : base(context, mapper)
         {
 
         }

@@ -46,7 +46,7 @@ namespace ExpenseTracker.API
             services.AddControllers();
 
             services.AddScoped<INoteRepository, NoteRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IOccasionRepository, OccasionRepository>();
             services.AddScoped<IPurseRepository, PurseRepository>();
 

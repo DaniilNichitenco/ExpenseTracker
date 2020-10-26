@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ExpenseTracker.Domain
 {
-    public class Profile : BaseEntity
+    public class Person : BaseEntity
     {
         public string Name { get; set; }
         public virtual ICollection<Purse> Purses { get; set; }

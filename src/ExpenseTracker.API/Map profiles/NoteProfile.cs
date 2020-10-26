@@ -3,9 +3,9 @@ using ExpenseTracker.Domain;
 using ExpenseTracker.API.Dtos.Notes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExpenseTracker.API.Map_profiles
+namespace ExpenseTracker.API.Map_Persons
 {
-    public static class NoteProfile
+    public static class NotePerson
     {
         public static Note MapToNote(this IMapper mapper, NoteForUpdateDto noteForUpdateDto)
         {

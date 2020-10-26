@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Profiles
+namespace ExpenseTracker.API.Dtos.People
 {
-    public class ProfileDto
+    public class PersonDto
     {
         public string Name { get; set; }
     }

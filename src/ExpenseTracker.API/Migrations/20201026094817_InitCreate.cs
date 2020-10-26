@@ -11,7 +11,7 @@ namespace ExpenseTracker.API.Migrations
                 name: "Auth");
 
             migrationBuilder.CreateTable(
-                name: "Profiles",
+                name: "People",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -21,7 +21,7 @@ namespace ExpenseTracker.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
+                    table.PrimaryKey("PK_People", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,7 +74,7 @@ namespace ExpenseTracker.API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ProfileId = table.Column<int>(nullable: false),
+                    PersonId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 40, nullable: false),
                     Message = table.Column<string>(nullable: false)
                 },
@@ -82,9 +82,9 @@ namespace ExpenseTracker.API.Migrations
                 {
                     table.PrimaryKey("PK_Notes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notes_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Notes_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -96,7 +96,7 @@ namespace ExpenseTracker.API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ProfileId = table.Column<int>(nullable: false),
+                    PersonId = table.Column<int>(nullable: false),
                     OccasionDate = table.Column<DateTime>(nullable: false),
                     Title = table.Column<string>(maxLength: 40, nullable: false),
                     Context = table.Column<string>(nullable: false)
@@ -105,9 +105,9 @@ namespace ExpenseTracker.API.Migrations
                 {
                     table.PrimaryKey("PK_Occasions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Occasions_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Occasions_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -119,7 +119,7 @@ namespace ExpenseTracker.API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ProfileId = table.Column<int>(nullable: false),
+                    PersonId = table.Column<int>(nullable: false),
                     Bill = table.Column<double>(nullable: false),
                     CurrencyCode = table.Column<string>(type: "char(3)", nullable: false),
                     Discriminator = table.Column<string>(nullable: false)
@@ -128,9 +128,9 @@ namespace ExpenseTracker.API.Migrations
                 {
                     table.PrimaryKey("PK_Purses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Purses_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Purses_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -253,19 +253,19 @@ namespace ExpenseTracker.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notes_ProfileId",
+                name: "IX_Notes_PersonId",
                 table: "Notes",
-                column: "ProfileId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Occasions_ProfileId",
+                name: "IX_Occasions_PersonId",
                 table: "Occasions",
-                column: "ProfileId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purses_ProfileId",
+                name: "IX_Purses_PersonId",
                 table: "Purses",
-                column: "ProfileId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -346,7 +346,7 @@ namespace ExpenseTracker.API.Migrations
                 schema: "Auth");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "People");
 
             migrationBuilder.DropTable(
                 name: "Roles",

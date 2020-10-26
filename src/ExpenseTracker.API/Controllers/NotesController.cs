@@ -6,7 +6,7 @@ using AutoMapper;
 using AutoMapper.Internal;
 using ExpenseTracker.API.Dtos.Notes;
 using ExpenseTracker.API.Infrastructure.Models;
-using ExpenseTracker.API.Map_profiles;
+using ExpenseTracker.API.Map_Persons;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
 using Microsoft.AspNetCore.Http;

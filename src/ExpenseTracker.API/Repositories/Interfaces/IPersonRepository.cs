@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Repositories.Interfaces
 {
-    public interface IProfileRepository : IRepository<Profile>
+    public interface IPersonRepository : IRepository<Person>
     {
     }
 }
