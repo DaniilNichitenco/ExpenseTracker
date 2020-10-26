@@ -1,0 +1,16 @@
+﻿using ExpenseTracker.Domain.Purses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ExpenseTracker.Domain
+{
+    public class Profile : BaseEntity
+    {
+        public string Name { get; set; }
+        public virtual ICollection<Purse> Purses { get; set; }
+        public virtual ICollection<Note> Notes { get; set; }
+        public virtual ICollection<Occasion> Occasions { get; set; }
+    }
+}
