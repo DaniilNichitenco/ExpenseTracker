@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "OaVbVzbU+t6Uc7X/Ca0Sn3S3K2cS8wxwzpXPZbgfk6SWRUvEQERmPn3PFaijaCal1yeT2hLwLdyOWnPCH2VrVQ==",
+  "dgSpecHash": "pjrXMiaccqQIOr4kervZC1TazMaKmKGQN7z5/exYa15nhzJ/F3VIbNdg4O++NhgwG22P8T1sxLxasgpmHYzYjw==",
   "success": true,
   "projectFilePath": "D:\\vscommunity\\ExpenseTracker\\src\\ExpenseTracker.API\\ExpenseTracker.API.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Антон\\.nuget\\packages\\automapper\\10.1.0\\automapper.10.1.0.nupkg.sha512",
-    "C:\\Users\\Антон\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.0\\automapper.extensions.microsoft.dependencyinjection.8.1.0.nupkg.sha512",
+    "C:\\Users\\Антон\\.nuget\\packages\\automapper\\9.0.0\\automapper.9.0.0.nupkg.sha512",
+    "C:\\Users\\Антон\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.9\\microsoft.aspnetcore.authentication.jwtbearer.3.1.9.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.9\\microsoft.aspnetcore.cryptography.internal.3.1.9.nupkg.sha512",
@@ -141,7 +141,7 @@
     "C:\\Users\\Антон\\.nuget\\packages\\system.objectmodel\\4.3.0\\system.objectmodel.4.3.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\system.private.datacontractserialization\\4.3.0\\system.private.datacontractserialization.4.3.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
-    "C:\\Users\\Антон\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\Антон\\.nuget\\packages\\system.reflection.emit\\4.3.0\\system.reflection.emit.4.3.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\system.reflection.emit.ilgeneration\\4.3.0\\system.reflection.emit.ilgeneration.4.3.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\system.reflection.emit.lightweight\\4.3.0\\system.reflection.emit.lightweight.4.3.0.nupkg.sha512",
     "C:\\Users\\Антон\\.nuget\\packages\\system.reflection.extensions\\4.3.0\\system.reflection.extensions.4.3.0.nupkg.sha512",

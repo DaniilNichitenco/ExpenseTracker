@@ -14,5 +14,7 @@ namespace ExpenseTracker.API.Dtos.Notes
 
         [StringLength(int.MaxValue, MinimumLength = 0)]
         public string Message { get; set; }
+        [Required]
+        public int PersonId { get; set; }
     }
 }

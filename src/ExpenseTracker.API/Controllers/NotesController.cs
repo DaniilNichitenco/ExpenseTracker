@@ -21,6 +21,7 @@ namespace ExpenseTracker.API.Controllers
         private readonly INoteRepository _repository;
         private readonly IMapper _mapper;
 
+        
         public NotesController(INoteRepository repository, IMapper mapper)
         {
             _repository = repository;
@@ -58,8 +59,7 @@ namespace ExpenseTracker.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNote([FromBody]NoteForUpdateDto noteForUpdateDto)
         {
-            //var note = _mapper.Map<Note>(noteForUpdateDto);
-            var note = _mapper.MapToNote(noteForUpdateDto);
+            var note = _mapper.Map<Note>(noteForUpdateDto);
             await _repository.Add(note);
 
             var noteDto = _mapper.Map<NoteDto>(note);

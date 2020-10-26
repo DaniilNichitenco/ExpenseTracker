@@ -26,11 +26,13 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public async Task Add(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
+            SaveChanges();
         }
 
         public async Task AddRange(IEnumerable<TEntity> entities)
         {
             await _context.Set<TEntity>().AddRangeAsync(entities);
+            SaveChanges();
         }
 
         public async Task<TEntity> Get(int id)
@@ -57,11 +59,18 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public void Remove(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
+            SaveChanges();
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
             _context.Set<TEntity>().RemoveRange(entities);
+            SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
         }
 
         public async Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate)

@@ -5,16 +5,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExpenseTracker.API.Map_Persons
 {
-    public static class NotePerson
+    public class NoteProfile : Profile
     {
-        public static Note MapToNote(this IMapper mapper, NoteForUpdateDto noteForUpdateDto)
+        public NoteProfile()
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<NoteForUpdateDto, Note>();
-            });
-            return mapper.Map<Note>(noteForUpdateDto);
+            CreateMap<Note, NoteDto>();
+            CreateMap<NoteForUpdateDto, Note>();
         }
-
     }
 }
