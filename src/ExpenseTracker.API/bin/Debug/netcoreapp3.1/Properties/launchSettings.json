@@ -13,7 +13,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/notes/1",
+      "launchUrl": "api/notes",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -21,7 +21,7 @@
     "ExpenseTracker.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/notes/1",
+      "launchUrl": "api/notes",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

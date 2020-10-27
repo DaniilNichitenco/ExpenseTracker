@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.API.Infrastructure.Models;
-using ExpenseTracker.API.Repositories.Inrefaces;
+using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -26,13 +26,13 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public async Task Add(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
-            SaveChanges();
+            await SaveChanges();
         }
 
         public async Task AddRange(IEnumerable<TEntity> entities)
         {
             await _context.Set<TEntity>().AddRangeAsync(entities);
-            SaveChanges();
+            await SaveChanges();
         }
 
         public async Task<TEntity> Get(int id)
@@ -56,21 +56,27 @@ namespace ExpenseTracker.API.Repositories.Implementations
             return await query.FirstOrDefaultAsync(entity => entity.Id == id);
         }
 
-        public void Remove(TEntity entity)
+        public async Task Remove(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public async Task RemoveRange(IEnumerable<TEntity> entities)
         {
             _context.Set<TEntity>().RemoveRange(entities);
-            SaveChanges();
+            await SaveChanges();
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(TEntity entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            await SaveChanges();
         }
 
         public async Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate)

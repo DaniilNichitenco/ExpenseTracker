@@ -10,6 +10,7 @@ namespace ExpenseTracker.API.Map_Persons
         public NoteProfile()
         {
             CreateMap<Note, NoteDto>();
+            CreateMap<Note, NoteGridRowDto>();
             CreateMap<NoteForUpdateDto, Note>();
         }
     }
