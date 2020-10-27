@@ -67,6 +67,21 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetNote), new { id = noteDto.Id }, noteDto);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateNote(int id, NoteForUpdateDto noteForUpdateDto)
+        {
+            var note = await _repository.Get(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(noteForUpdateDto, note);
+            await _repository.Update(note);
+
+            return NoContent();
+        }
+
         // DELETE: api/notes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNote(int id)

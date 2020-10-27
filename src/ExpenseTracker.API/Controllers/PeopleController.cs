@@ -56,34 +56,20 @@ namespace ExpenseTracker.API.Controllers
         // PUT: api/People/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutPerson(int id, Person person)
-        //{
-        //    if (id != person.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePerson(int id, PersonForUpdateDto personForUpdateDto)
+        {
+            var person = await _repository.Get(id);
+            if(person == null)
+            {
+                return NotFound();
+            }
 
-        //    _context.Entry(person).State = EntityState.Modified;
+            _mapper.Map(personForUpdateDto, person);
+            await _repository.Update(person);
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!PersonExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // POST: api/People
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
