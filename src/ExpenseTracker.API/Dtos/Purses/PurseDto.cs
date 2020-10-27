@@ -7,6 +7,8 @@ namespace ExpenseTracker.API.Dtos.Purses
 {
     public class PurseDto
     {
+        public int Id { get; set; }
+
         double _bill;
         public double Bill
         {

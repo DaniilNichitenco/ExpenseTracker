@@ -1,5 +1,4 @@
-﻿using ExpenseTracker.API.Repositories.Inrefaces;
-using ExpenseTracker.Domain.Purses;
+﻿using ExpenseTracker.Domain.Purses;
 using System;
 using System.Collections.Generic;
 using System.Linq;

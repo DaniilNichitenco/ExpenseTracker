@@ -37,10 +37,10 @@ namespace ExpenseTracker.API.Infrastructure.Middlewares
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             return context.Response.WriteAsync(new ErrorDetails()
-                {
-                    StatusCode = context.Response.StatusCode,
-                    Message = "Internal Server Error."
-            }.ToString());
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = "Internal Server Error. " + exception.ToString()
+            }.ToString()) ;
         }
     }
 }

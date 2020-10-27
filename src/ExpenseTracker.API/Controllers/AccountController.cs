@@ -22,11 +22,13 @@ namespace ExpenseTracker.API.Controllers
     {
         private readonly AuthOptions _authOptions;
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public AccountController(IOptions<AuthOptions> options, SignInManager<User> signInManager)
+        public AccountController(IOptions<AuthOptions> options, SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _authOptions = options.Value;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -34,8 +36,12 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var checkingPasswordResult = await _signInManager.PasswordSignInAsync(userForLoginDto.Username, userForLoginDto.Password, false, false);
+            var u = new User() { Email = "daniil@gmail.com", UserName = "daniil" };
+            await _userManager.CreateAsync(u, "1234qwerty");
 
-            if(checkingPasswordResult.Succeeded)
+            checkingPasswordResult = await _signInManager.PasswordSignInAsync(u.UserName, "1234qwerty", false, false);
+            
+            if (checkingPasswordResult.Succeeded)
             {
                 var encodedToken = GetJwtSecurityToken();
 

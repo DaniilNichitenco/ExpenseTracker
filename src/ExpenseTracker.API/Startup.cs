@@ -16,6 +16,7 @@ using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.API.Infrastructure.Middlewares;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.API.Repositories.Implementations;
+using Microsoft.AspNetCore.Identity;
 
 namespace ExpenseTracker.API
 {
@@ -73,7 +74,6 @@ namespace ExpenseTracker.API
 
             app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             //app.UseHttpsRedirection();
-            Console.WriteLine("conf");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
