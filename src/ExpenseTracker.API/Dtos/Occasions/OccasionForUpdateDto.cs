@@ -17,5 +17,8 @@ namespace ExpenseTracker.API.Dtos.Occasions
 
         [StringLength(int.MaxValue, MinimumLength = 0)]
         public string Context { get; set; }
+
+        [Required]
+        public int PersonId { get; set; }
     }
 }

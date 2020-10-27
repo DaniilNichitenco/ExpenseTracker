@@ -6,6 +6,9 @@ namespace ExpenseTracker.Domain.Purses
 {
     public class PurseEUR : Purse
     {
-       
+        public PurseEUR()
+        {
+            CurrencyCode = "EUR";
+        }
     }
 }

@@ -8,7 +8,6 @@ namespace ExpenseTracker.API.Dtos.Purses
 {
     public class PurseForUpdateDto
     {
-        double _bill;
         [Required]
         [Range(0.0d, Double.MaxValue)]
         public double Bill { get; set; }
@@ -16,5 +15,8 @@ namespace ExpenseTracker.API.Dtos.Purses
         [Required]
         [MaxLength(3)]
         public string CurrencyCode { get; set; }
+
+        [Required]
+        public int PersonId { get; set; }
     }
 }
