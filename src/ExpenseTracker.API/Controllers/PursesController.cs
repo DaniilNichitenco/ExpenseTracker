@@ -53,6 +53,7 @@ namespace ExpenseTracker.API.Controllers
             _mapper.Map(purseForUpdateDto, purse);
 
             await _repository.Add(purse);
+            await _repository.SaveChangesAsync();
 
             var purseDto = _mapper.Map<PurseDto>(purse);
 
@@ -69,7 +70,8 @@ namespace ExpenseTracker.API.Controllers
             }
 
             _mapper.Map(purseForUpdateDto, purse);
-            await _repository.Update(purse);
+            _repository.Update(purse);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -83,7 +85,8 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            await _repository.Remove(purse);
+            _repository.Remove(purse);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }
