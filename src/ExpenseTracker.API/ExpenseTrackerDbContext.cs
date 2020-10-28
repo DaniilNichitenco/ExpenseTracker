@@ -29,9 +29,6 @@ namespace ExpenseTracker.API
             var assemblyPurse = typeof(PurseConfig).Assembly;
 
             modelBuilder.ApplyConfigurationsFromAssembly(assemblyNote);
-            modelBuilder.ApplyConfigurationsFromAssembly(assemblyOccasion);
-            modelBuilder.ApplyConfigurationsFromAssembly(assemblyProfile);
-            modelBuilder.ApplyConfigurationsFromAssembly(assemblyPurse);
 
             modelBuilder.Entity<PurseEUR>();
             modelBuilder.Entity<PurseMDL>();

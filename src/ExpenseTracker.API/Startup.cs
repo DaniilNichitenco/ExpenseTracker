@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using System.Reflection;
 using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.API.Infrastructure.Middlewares;
@@ -35,8 +34,13 @@ namespace ExpenseTracker.API
             services.AddDbContext<ExpenseTrackerDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExpenseTrackerConnection")));
 
-            services.AddIdentity<User, Role>(options =>
-                options.Password.RequiredLength = 8)
+            services.AddIdentity<User, Role>(options => {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            })
+                .AddUserStore<UserStore>()
                 .AddEntityFrameworkStores<ExpenseTrackerDbContext>();
 
             var authOptions = services.ConfigureAuthOptions(Configuration);
