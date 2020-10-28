@@ -16,6 +16,8 @@ using ExpenseTracker.API.Infrastructure.Middlewares;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.API.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ExpenseTracker.API
 {
@@ -31,8 +33,11 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ExpenseTrackerDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("ExpenseTrackerConnection")));
+            services.AddDbContext<ExpenseTrackerDbContext>(options => {
+
+                options.UseSqlServer(Configuration.GetConnectionString("ExpenseTrackerConnection"));
+                options.UseLazyLoadingProxies();
+            });
 
             services.AddIdentity<User, Role>(options => {
                 options.Password.RequiredLength = 8;
@@ -46,9 +51,9 @@ namespace ExpenseTracker.API
             var authOptions = services.ConfigureAuthOptions(Configuration);
             services.AddJwtAuthentication(authOptions);
 
-            //services.AddControllers(options =>
-            //    options.Filters.Add(new AuthorizeFilter()));
-            services.AddControllers();
+            services.AddControllers(options =>
+                options.Filters.Add(new AuthorizeFilter()));
+            //services.AddControllers();
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -56,6 +61,17 @@ namespace ExpenseTracker.API
             services.AddScoped<IPurseRepository, PurseRepository>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Authorization/AccessDenied";
+                options.Cookie.Name = "ExpenseTracker_Auth";
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.LoginPath = "/Authorization/Login";
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.SlidingExpiration = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
