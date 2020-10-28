@@ -16,11 +16,11 @@ namespace ExpenseTracker.API.Repositories.Interfaces
         Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate);
         Task Add(TEntity entity);
         Task AddRange(IEnumerable<TEntity> entities);
-        Task Remove(TEntity entity);
-        Task RemoveRange(IEnumerable<TEntity> entities);
+        void Remove(TEntity entity);
+        void RemoveRange(IEnumerable<TEntity> entities);
         Task<TEntity> GetWithInclude(int id, params Expression<Func<TEntity, object>>[] includeProperties);
         Task<PaginatedResult<TDto>> GetPagedData<TDto>(PagedRequest request) where TDto : class;
-        Task SaveChanges();
-        Task Update(TEntity entity);
+        Task SaveChangesAsync();
+        void Update(TEntity entity);
     }
 }

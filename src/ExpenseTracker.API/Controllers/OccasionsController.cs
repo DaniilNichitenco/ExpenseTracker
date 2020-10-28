@@ -49,6 +49,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var occasion = _mapper.Map<Occasion>(occasionForUpdateDto);
             await _repository.Add(occasion);
+            await _repository.SaveChangesAsync();
 
             var occasionDto = _mapper.Map<OccasionDto>(occasion);
 
@@ -65,7 +66,8 @@ namespace ExpenseTracker.API.Controllers
             }
 
             _mapper.Map(occasionForUpdateDto, occasion);
-            await _repository.Update(occasion);
+            _repository.Update(occasion);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -79,7 +81,8 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            await _repository.Remove(occasion);
+            _repository.Remove(occasion);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }

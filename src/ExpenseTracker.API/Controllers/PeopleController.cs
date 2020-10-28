@@ -66,7 +66,8 @@ namespace ExpenseTracker.API.Controllers
             }
 
             _mapper.Map(personForUpdateDto, person);
-            await _repository.Update(person);
+            _repository.Update(person);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -79,6 +80,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var person = _mapper.Map<Person>(personForUpdateDto);
             await _repository.Add(person);
+            await _repository.SaveChangesAsync();
 
             var personDto = _mapper.Map<PersonDto>(person);
             
@@ -95,7 +97,8 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            await _repository.Remove(person);
+            _repository.Remove(person);
+            await _repository.SaveChangesAsync();
 
             return NoContent();
         }

@@ -17,6 +17,9 @@ namespace ExpenseTracker.EFMapping
             builder.Property(p => p.CurrencyCode)
                 .IsRequired()
                 .HasColumnType("char(3)");
+
+            builder.Property(p => p.RowVersion)
+                .IsRowVersion();
         }
     }
 }
