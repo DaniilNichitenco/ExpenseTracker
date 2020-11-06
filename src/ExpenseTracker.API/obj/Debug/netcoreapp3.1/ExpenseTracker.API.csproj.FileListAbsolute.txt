@@ -131,8 +131,6 @@ D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\run
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
-D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.csproj.CoreCompileInputs.cache
-D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.MvcApplicationPartsAssemblyInfo.cache
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Razor.Language.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.dll
@@ -225,3 +223,10 @@ D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\sta
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.pdb
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.genruntimeconfig.cache
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.csproj.CoreCompileInputs.cache
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.MvcApplicationPartsAssemblyInfo.cs
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.MvcApplicationPartsAssemblyInfo.cache

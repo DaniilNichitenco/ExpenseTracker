@@ -18,6 +18,7 @@ using ExpenseTracker.API.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
 
 namespace ExpenseTracker.API
 {
@@ -50,6 +51,8 @@ namespace ExpenseTracker.API
 
             var authOptions = services.ConfigureAuthOptions(Configuration);
             services.AddJwtAuthentication(authOptions);
+
+            ConfigureSwagger(services);
 
             services.AddControllers(options =>
                 options.Filters.Add(new AuthorizeFilter()));
@@ -93,10 +96,49 @@ namespace ExpenseTracker.API
             app.UseAuthorization();
 
             app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "Swagger Expense Tracker API v1");
+            });
+
             //app.UseHttpsRedirection();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
+            var contact = new OpenApiContact()
+            {
+                Name = "Daniil Nichitenco",
+                Email = "daniilnikitenco@example.com",
+                Url = new Uri("http://www.example.com")
+            };
+
+            var license = new OpenApiLicense()
+            {
+                Name = "My License",
+                Url = new Uri("http://www.example.com")
+            };
+
+            var info = new OpenApiInfo()
+            {
+                Version = "v1",
+                Title = "Swagger Expense Tracker API",
+                Description = "Swagger Expense Tracker API Description",
+                TermsOfService = new Uri("http://www.example.com"),
+                Contact = contact,
+                License = license
+            };
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", info);
             });
         }
     }
