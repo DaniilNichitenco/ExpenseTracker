@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseTracker.API
 {
@@ -50,6 +51,7 @@ namespace ExpenseTracker.API
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
             })
+                .AddRoles<Role>()
                 .AddUserStore<UserStore>()
                 .AddEntityFrameworkStores<ExpenseTrackerDbContext>();
 
@@ -58,9 +60,13 @@ namespace ExpenseTracker.API
 
             ConfigureSwagger(services);
 
-            //services.AddControllers(options =>
-            //    options.Filters.Add(new AuthorizeFilter()));
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();

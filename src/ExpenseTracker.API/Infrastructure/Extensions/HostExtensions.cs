@@ -22,9 +22,11 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
                 {
                     var context = services.GetRequiredService<ExpenseTrackerDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
+                    var roleManager = services.GetRequiredService<RoleManager<Role>>();
+
                     context.Database.Migrate();
 
-                    await Seed.SeedUsers(userManager);
+                    await Seed.SeedUsers(userManager, roleManager);
                 }
                 catch(Exception exception)
                 {
