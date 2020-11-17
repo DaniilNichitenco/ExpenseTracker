@@ -45,6 +45,15 @@ namespace ExpenseTracker.API.Controllers
             return Ok(pursesDto);
         }
 
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserPurses(int id)
+        {
+            var purses = await _repository.Where(p => p.PersonId == id);
+            List<PurseDto> pursesDto = new List<PurseDto>();
+            purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));
+            return Ok(pursesDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreatePurse([FromBody] PurseForUpdateDto purseForUpdateDto)
         {

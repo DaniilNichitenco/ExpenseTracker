@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace ExpenseTracker.API
 {
@@ -34,6 +35,9 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<KestrelServerOptions>(
+                Configuration.GetSection("Kestrel"));
+
             services.AddDbContext<ExpenseTrackerDbContext>(options => {
 
                 options.UseSqlServer(Configuration.GetConnectionString("ExpenseTrackerConnection"));
@@ -54,9 +58,9 @@ namespace ExpenseTracker.API
 
             ConfigureSwagger(services);
 
-            services.AddControllers(options =>
-                options.Filters.Add(new AuthorizeFilter()));
-            //services.AddControllers();
+            //services.AddControllers(options =>
+            //    options.Filters.Add(new AuthorizeFilter()));
+            services.AddControllers();
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -80,6 +84,7 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

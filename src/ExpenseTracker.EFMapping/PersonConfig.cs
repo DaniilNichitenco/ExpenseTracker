@@ -11,9 +11,13 @@ namespace ExpenseTracker.EFMapping
     {
         public void Configure(EntityTypeBuilder<Person> builder)
         {
-            builder.Property(p => p.Name)
+            builder.Property(p => p.FirstName)
                 .IsRequired()
-                .HasMaxLength(30);
+                .HasMaxLength(15);
+
+            builder.Property(p => p.LastName)
+                .IsRequired()
+                .HasMaxLength(15);
 
             builder.HasMany(p => p.Purses)
                 .WithOne(p => p.Person)

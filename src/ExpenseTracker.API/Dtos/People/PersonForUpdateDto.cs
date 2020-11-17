@@ -10,6 +10,10 @@ namespace ExpenseTracker.API.Dtos.People
     {
         [Required]
         [StringLength(15, MinimumLength = 3)]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(15, MinimumLength = 3)]
+        public string LastName { get; set; }
     }
 }

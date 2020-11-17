@@ -8,7 +8,8 @@ namespace ExpenseTracker.Domain
 {
     public class Person : BaseEntity
     {
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public virtual ICollection<Purse> Purses { get; set; }
         public virtual ICollection<Note> Notes { get; set; }
         public virtual ICollection<Occasion> Occasions { get; set; }
