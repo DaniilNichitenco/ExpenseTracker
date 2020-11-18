@@ -14,8 +14,8 @@ namespace ExpenseTracker.API
             {
                 var user = new User()
                 {
-                    UserName = "lagger179",
-                    Email = "daniilnikitenco@gmail.com",
+                    UserName = "lagger179971",
+                    Email = "daniilnikitenco1@gmail.com",
                     EmailConfirmed = true
                 };
 

@@ -10,6 +10,8 @@ using ExpenseTracker.Domain;
 using ExpenseTracker.API.Repositories.Interfaces;
 using AutoMapper;
 using ExpenseTracker.API.Dtos.People;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -27,6 +29,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // GET: api/People
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetPeople()
         {
@@ -38,10 +41,27 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // GET: api/People/5
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPerson(int id)
         {
             var person = await _repository.Get(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            PersonDto personDto = _mapper.Map<PersonDto>(person);
+
+            return Ok(personDto);
+        }
+
+        [HttpGet("owner/{ownerid}")]
+        public async Task<IActionResult> GetPersonByOwnerId(int ownerid)
+        {
+            var people = await _repository.Where(p => p.OwnerId == ownerid);
+            var person = people.FirstOrDefault();
 
             if (person == null)
             {
@@ -72,9 +92,12 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
+
+
         // POST: api/People
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<Person>> CreatePerson([FromBody]PersonForUpdateDto personForUpdateDto)
         {
@@ -88,6 +111,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // DELETE: api/People/5
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {

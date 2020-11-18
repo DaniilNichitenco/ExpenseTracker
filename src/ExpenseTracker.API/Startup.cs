@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
+using ExpenseTracker.API.Authorization.PersonAuthHandler;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace ExpenseTracker.API
 {
@@ -52,21 +54,34 @@ namespace ExpenseTracker.API
                 options.Password.RequireUppercase = false;
             })
                 .AddRoles<Role>()
-                .AddUserStore<UserStore>()
+                //.AddUserStore<UserStore>()
                 .AddEntityFrameworkStores<ExpenseTrackerDbContext>();
 
             var authOptions = services.ConfigureAuthOptions(Configuration);
             services.AddJwtAuthentication(authOptions);
 
             ConfigureSwagger(services);
+            services.AddControllers();
+            //services.AddControllers(options =>
+            //{
+            //    var policy = new AuthorizationPolicyBuilder()
+            //                    .RequireAuthenticatedUser()
+            //                    .Build();
+            //    options.Filters.Add(new AuthorizeFilter(policy));
+            //});
 
-            services.AddControllers(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("Permission", policy =>
+            //        policy.Requirements.Add(new OperationAuthorizationRequirement()));
+            //}
+            //);
+
+
+            //services.AddScoped<IAuthorizationHandler, PersonIsOwnerAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, PersonAdministratorsAuthorizationHandler>();
+
+            //services.AddAuthorization();
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
