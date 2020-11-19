@@ -12,27 +12,30 @@ using AutoMapper;
 using ExpenseTracker.API.Dtos.People;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using ExpenseTracker.Domain.Auth;
 
 namespace ExpenseTracker.API.Controllers
 {
     [Route("api/[controller]")]
-    //[AllowAnonymous]
     [ApiController]
     public class PeopleController : ControllerBase
     {
         private readonly IPersonRepository _repository;
         private readonly IMapper _mapper;
         IAuthorizationService _authorizationService;
+        UserManager<User> _userManager;
 
-        public PeopleController(IPersonRepository repository, IMapper mapper, IAuthorizationService authorizationService)
+        public PeopleController(IPersonRepository repository, IMapper mapper, 
+            IAuthorizationService authorizationService, UserManager<User> userManager)
         {
             _repository = repository;
             _mapper = mapper;
             _authorizationService = authorizationService;
+            _userManager = userManager;
         }
 
         // GET: api/People
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetPeople()
         {
@@ -45,9 +48,14 @@ namespace ExpenseTracker.API.Controllers
 
         // GET: api/People/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPerson(int id)
+        public async Task<IActionResult> GetPersonById(int id)
         {
             var person = await _repository.Get(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
 
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, person, "Permission");
 
@@ -56,20 +64,21 @@ namespace ExpenseTracker.API.Controllers
                 return Unauthorized();
             }
 
-            if (person == null)
-            {
-                return NotFound();
-            }
-
             PersonDto personDto = _mapper.Map<PersonDto>(person);
+            var user = await GetUserAsync();
+            personDto.Email = user.Email;
+            personDto.UserName = user.UserName;
+
 
             return Ok(personDto);
         }
 
-        [HttpGet("owner/{ownerid}")]
-        public async Task<IActionResult> GetPersonByOwnerId(int ownerid)
+        [HttpGet("owner")]
+        public async Task<IActionResult> GetPerson()
         {
-            var people = await _repository.Where(p => p.OwnerId == ownerid);
+            var user = await GetUserAsync();
+
+            var people = await _repository.Where(p => p.OwnerId == user.Id);
             var person = people.FirstOrDefault();
 
             if (person == null)
@@ -78,6 +87,8 @@ namespace ExpenseTracker.API.Controllers
             }
 
             PersonDto personDto = _mapper.Map<PersonDto>(person);
+            personDto.Email = user.Email;
+            personDto.UserName = user.UserName;
 
             return Ok(personDto);
         }
@@ -89,9 +100,16 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> UpdatePerson(int id, PersonForUpdateDto personForUpdateDto)
         {
             var person = await _repository.Get(id);
-            if(person == null)
+            if (person == null)
             {
                 return NotFound();
+            }
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, person, "Permission");
+
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
             }
 
             _mapper.Map(personForUpdateDto, person);
@@ -106,27 +124,45 @@ namespace ExpenseTracker.API.Controllers
         // POST: api/People
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<Person>> CreatePerson([FromBody]PersonForUpdateDto personForUpdateDto)
+        public async Task<ActionResult<Person>> CreatePerson([FromBody] PersonForUpdateDto personForUpdateDto, int userId)
         {
+            var user = await GetUserAsync(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
             var person = _mapper.Map<Person>(personForUpdateDto);
+            person.OwnerId = userId;
+
             await _repository.Add(person);
             await _repository.SaveChangesAsync();
 
             var personDto = _mapper.Map<PersonDto>(person);
-            
+
             return CreatedAtAction(nameof(GetPerson), new { id = personDto.Id }, personDto);
         }
 
         // DELETE: api/People/5
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
             var person = await _repository.Get(id);
+            var user = await GetUserAsync(person.OwnerId);
+
             if (person == null)
             {
                 return NotFound();
             }
+
+            if(user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+
 
             _repository.Remove(person);
             await _repository.SaveChangesAsync();
@@ -134,5 +170,15 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
+        private async Task<User> GetUserAsync()
+        {
+            var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
+            return await _userManager.FindByIdAsync(id);
+        }
+
+        private async Task<User> GetUserAsync(int id)
+        {
+            return await _userManager.FindByIdAsync(id.ToString());
+        }
     }
 }

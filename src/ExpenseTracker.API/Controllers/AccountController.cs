@@ -48,7 +48,18 @@ namespace ExpenseTracker.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var checkingPasswordResult = await _signInManager.PasswordSignInAsync(userForLoginDto.Login, userForLoginDto.Password, false, false);
+            Microsoft.AspNetCore.Identity.SignInResult checkingPasswordResult;
+            var userCheck = await _userManager.FindByEmailAsync(userForLoginDto.Login);
+            if(userCheck != null)
+            {
+                checkingPasswordResult = await _signInManager.PasswordSignInAsync(
+                    userCheck.UserName, userForLoginDto.Password, false, false);
+            }
+            else
+            {
+                checkingPasswordResult = await _signInManager.PasswordSignInAsync(
+                    userForLoginDto.Login, userForLoginDto.Password, false, false);
+            }
            
             if (checkingPasswordResult.Succeeded)
             {
@@ -67,12 +78,9 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> SignUp(UserForSignUpDto userForSignUpDto)
         {
             var user = _mapper.Map<User>(userForSignUpDto);
+            var IR = await _userManager.CreateAsync(user, userForSignUpDto.Password);
 
-            var token = Request.Headers[HeaderNames.Authorization];
-
-            await _userManager.CreateAsync(user, userForSignUpDto.Password);
-
-            if(await _userManager.FindByIdAsync(user.Id.ToString()) == null)
+            if(!IR.Succeeded)
             {
                 return BadRequest();
             }
@@ -80,11 +88,13 @@ namespace ExpenseTracker.API.Controllers
             await EnsureRole(user.Id.ToString(), "user");
 
             var person = _mapper.Map<PersonForUpdateDto>(userForSignUpDto);
-            person.OwnerId = user.Id;
+            await CreatePerson(person, user.Id);
 
-            await CreatePerson(person);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(new { OwnerId = user.Id});
+            var encodedToken = GetJwtSecurityToken(user.Id, roles as List<string>);
+
+            return Ok(new { OwnerId = user.Id, AccessToken = encodedToken });
         }
 
         private string GetJwtSecurityToken(int userId, List<string> roles)
@@ -111,23 +121,24 @@ namespace ExpenseTracker.API.Controllers
             if (!await _roleManager.RoleExistsAsync(role))
             {
                 IR = await _roleManager.CreateAsync(new Role(role));
+                if (!IR.Succeeded)
+                {
+                    throw new Exception($"Could not create role {role}");
+                }
             }
 
             var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new Exception("The password was probably not strong enough!");
-            }
 
             IR = await _userManager.AddToRoleAsync(user, role);
 
             return IR;
         }
 
-        private async Task<ActionResult<Person>> CreatePerson(PersonForUpdateDto personForUpdateDto)
+        private async Task<ActionResult<Person>> CreatePerson(PersonForUpdateDto personForUpdateDto, int userId)
         {
             var person = _mapper.Map<Person>(personForUpdateDto);
+            person.OwnerId = userId;
+
             await _repository.Add(person);
             await _repository.SaveChangesAsync();
 
