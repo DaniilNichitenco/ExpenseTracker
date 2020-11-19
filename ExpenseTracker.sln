@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.API", "src\E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.Domain", "src\ExpenseTracker.Domain\ExpenseTracker.Domain.csproj", "{C134435A-924E-485D-B8A5-F1AF15F80498}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.EFMapping", "src\ExpenseTracker.EFMapping\ExpenseTracker.EFMapping.csproj", "{C96F0807-AE7D-4494-B276-B06BC8FCEA4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracker.EFMapping", "src\ExpenseTracker.EFMapping\ExpenseTracker.EFMapping.csproj", "{C96F0807-AE7D-4494-B276-B06BC8FCEA4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

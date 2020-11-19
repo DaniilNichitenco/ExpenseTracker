@@ -9,7 +9,7 @@ namespace ExpenseTracker.API.Dtos.Account
     public class UserForLoginDto
     {
         [Required]
-        public string Username { get; set; }
+        public string Login { get; set; }
 
         [Required]
         public string Password { get; set; }

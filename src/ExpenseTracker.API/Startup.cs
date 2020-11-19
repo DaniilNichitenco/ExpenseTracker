@@ -18,6 +18,11 @@ using ExpenseTracker.API.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Authorization;
+using ExpenseTracker.API.Authorization.PersonAuthHandler;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace ExpenseTracker.API
 {
@@ -33,6 +38,9 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<KestrelServerOptions>(
+                Configuration.GetSection("Kestrel"));
+
             services.AddDbContext<ExpenseTrackerDbContext>(options => {
 
                 options.UseSqlServer(Configuration.GetConnectionString("ExpenseTrackerConnection"));
@@ -45,15 +53,35 @@ namespace ExpenseTracker.API
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
             })
-                .AddUserStore<UserStore>()
+                .AddRoles<Role>()
+                //.AddUserStore<UserStore>()
                 .AddEntityFrameworkStores<ExpenseTrackerDbContext>();
 
             var authOptions = services.ConfigureAuthOptions(Configuration);
             services.AddJwtAuthentication(authOptions);
 
-            services.AddControllers(options =>
-                options.Filters.Add(new AuthorizeFilter()));
-            //services.AddControllers();
+            ConfigureSwagger(services);
+            services.AddControllers();
+            //services.AddControllers(options =>
+            //{
+            //    var policy = new AuthorizationPolicyBuilder()
+            //                    .RequireAuthenticatedUser()
+            //                    .Build();
+            //    options.Filters.Add(new AuthorizeFilter(policy));
+            //});
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("Permission", policy =>
+            //        policy.Requirements.Add(new OperationAuthorizationRequirement()));
+            //}
+            //);
+
+
+            //services.AddScoped<IAuthorizationHandler, PersonIsOwnerAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, PersonAdministratorsAuthorizationHandler>();
+
+            //services.AddAuthorization();
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -77,6 +105,7 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -93,10 +122,49 @@ namespace ExpenseTracker.API
             app.UseAuthorization();
 
             app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "Swagger Expense Tracker API v1");
+            });
+
             //app.UseHttpsRedirection();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
+            var contact = new OpenApiContact()
+            {
+                Name = "Daniil Nichitenco",
+                Email = "daniilnikitenco@example.com",
+                Url = new Uri("http://www.example.com")
+            };
+
+            var license = new OpenApiLicense()
+            {
+                Name = "My License",
+                Url = new Uri("http://www.example.com")
+            };
+
+            var info = new OpenApiInfo()
+            {
+                Version = "v1",
+                Title = "Swagger Expense Tracker API",
+                Description = "Swagger Expense Tracker API Description",
+                TermsOfService = new Uri("http://www.example.com"),
+                Contact = contact,
+                License = license
+            };
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", info);
             });
         }
     }
