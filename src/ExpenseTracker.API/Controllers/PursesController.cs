@@ -22,14 +22,17 @@ namespace ExpenseTracker.API.Controllers
         private readonly IMapper _mapper;
         private UserManager<User> _userManager;
         IAuthorizationService _authorizationService;
+        IPersonRepository _personRepository;
 
         public PursesController(IPurseRepository repository, IMapper mapper,
-            UserManager<User> userManager, IAuthorizationService authorizationService)
+            UserManager<User> userManager, IAuthorizationService authorizationService,
+            IPersonRepository personRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
             _authorizationService = authorizationService;
+            _personRepository = personRepository;
         }
 
         [HttpGet("{id}")]
@@ -65,17 +68,38 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetUserPurses(int id)
         {
             var purses = await _repository.Where(p => p.PersonId == id);
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
+
             List<PurseDto> pursesDto = new List<PurseDto>();
             purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));
             return Ok(pursesDto);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreatePurse([FromBody] PurseForUpdateDto purseForUpdateDto)
+        [HttpPost("person/{id}")]
+        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForUpdateDto, int id)
         {
+            var person = await _personRepository.Get(id);
+            if(person == null)
+            {
+                return NotFound();
+            }
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, person, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
+
+            var user = await GetUserAsync();
             var purse = PurseFactory.CreateEmptyPurse(purseForUpdateDto.CurrencyCode);
 
             _mapper.Map(purseForUpdateDto, purse);
+            purse.OwnerId = user.Id;
 
             await _repository.Add(purse);
             await _repository.SaveChangesAsync();
@@ -85,13 +109,25 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetPurse), new { id = purseDto.Id }, purseDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("person/{id}")]
         public async Task<IActionResult> UpdatePurse(int id, PurseForUpdateDto purseForUpdateDto)
         {
-            var purse = await _repository.Get(id);
-            if (purse == null)
+            var person = await _personRepository.Get(id);
+            if (person == null)
             {
                 return NotFound();
+            }
+
+            var purse = await _repository.Get(purseForUpdateDto.Id);
+            if(purse == null)
+            {
+                return NotFound();
+            }
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
             }
 
             _mapper.Map(purseForUpdateDto, purse);
@@ -108,6 +144,13 @@ namespace ExpenseTracker.API.Controllers
             if (purse == null)
             {
                 return NotFound();
+            }
+
+            var user = await GetUserAsync();
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
             }
 
             _repository.Remove(purse);

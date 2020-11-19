@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Dtos.Purses
 {
-    public class PurseForUpdateDto
+    public class PurseForCreateDto
     {
-        [Required]
-        public int Id { get; set; }
-
         [Required]
         [Range(0.0d, Double.MaxValue)]
         public double Bill { get; set; }
