@@ -7,6 +7,7 @@ using ExpenseTracker.API.Dtos.Purses;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain.Auth;
 using ExpenseTracker.Domain.Purses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,15 @@ namespace ExpenseTracker.API.Controllers
         private readonly IPurseRepository _repository;
         private readonly IMapper _mapper;
         private UserManager<User> _userManager;
+        IAuthorizationService _authorizationService;
 
         public PursesController(IPurseRepository repository, IMapper mapper,
-            UserManager<User> userManager)
+            UserManager<User> userManager, IAuthorizationService authorizationService)
         {
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet("{id}")]
@@ -38,12 +41,17 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            var user = await GetUserAsync();
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
 
             var purseDto = _mapper.Map<PurseDto>(purse);
             return Ok(purseDto);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllPurses()
         {

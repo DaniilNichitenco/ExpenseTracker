@@ -1,16 +1,24 @@
 ﻿using ExpenseTracker.Domain;
+using ExpenseTracker.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Authorization.BaseEntityAuthHandler
+namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
 {
-    public class BaseEntityAdministratorsAuthorizationHandler :
+    public class ListBaseEntityAdministratorsAuthorizationHandler :
         AuthorizationHandler<OperationAuthorizationRequirement, BaseEntity>
     {
+        UserManager<User> _userManager;
+        public ListBaseEntityAdministratorsAuthorizationHandler(UserManager<User> userManager)
+        {
+            _userManager = userManager;
+        }
+
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
             OperationAuthorizationRequirement requirement, BaseEntity resource)
         {
@@ -23,13 +31,12 @@ namespace ExpenseTracker.API.Authorization.BaseEntityAuthHandler
 
             var role = roles.FirstOrDefault(r => r.Value == "admin");
 
-            if(role != null)
+            if (role != null)
             {
                 context.Succeed(requirement);
             }
 
             return Task.CompletedTask;
-
         }
     }
 }
