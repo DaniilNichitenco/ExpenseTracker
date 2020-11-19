@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ExpenseTracker.API.Dtos.Purses;
 using ExpenseTracker.API.Repositories.Interfaces;
+using ExpenseTracker.Domain.Auth;
 using ExpenseTracker.Domain.Purses;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracker.API.Controllers
@@ -17,23 +19,29 @@ namespace ExpenseTracker.API.Controllers
     {
         private readonly IPurseRepository _repository;
         private readonly IMapper _mapper;
+        private UserManager<User> _userManager;
 
-        public PursesController(IPurseRepository repository, IMapper mapper)
+        public PursesController(IPurseRepository repository, IMapper mapper,
+            UserManager<User> userManager)
         {
             _repository = repository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPurse(int id)
         {
             var purse = await _repository.Get(id);
-            if (purse != null)
+            if(purse == null)
             {
-                var purseDto = _mapper.Map<PurseDto>(purse);
-                return Ok(purseDto);
+                return NotFound();
             }
-            return NotFound();
+
+            var user = await GetUserAsync();
+
+            var purseDto = _mapper.Map<PurseDto>(purse);
+            return Ok(purseDto);
         }
 
         [HttpGet]
@@ -98,6 +106,12 @@ namespace ExpenseTracker.API.Controllers
             await _repository.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task<User> GetUserAsync()
+        {
+            var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
+            return await _userManager.FindByIdAsync(id);
         }
     }
 }

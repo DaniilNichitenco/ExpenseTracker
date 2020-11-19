@@ -8,19 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Authorization.PersonAuthHandler
+namespace ExpenseTracker.API.Authorization.BaseEntityAuthHandler
 {
-    public class PersonIsOwnerAuthorizationHandler : 
-        AuthorizationHandler<OperationAuthorizationRequirement, Person>
+    public class BaseEntityIsOwnerAuthorizationHandler : 
+        AuthorizationHandler<OperationAuthorizationRequirement, BaseEntity>
     {
         UserManager<User> _userManager;
-        public PersonIsOwnerAuthorizationHandler(UserManager<User> userManager)
+        public BaseEntityIsOwnerAuthorizationHandler(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
         protected override Task HandleRequirementAsync
             (AuthorizationHandlerContext context, 
-            OperationAuthorizationRequirement requirement, Person resource)
+            OperationAuthorizationRequirement requirement, BaseEntity resource)
         {
             if(context.User == null || resource == null)
             {

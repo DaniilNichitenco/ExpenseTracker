@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Authorization.PersonAuthHandler
+namespace ExpenseTracker.API.Authorization.BaseEntityAuthHandler
 {
-    public class PersonAdministratorsAuthorizationHandler :
-        AuthorizationHandler<OperationAuthorizationRequirement, Person>
+    public class BaseEntityAdministratorsAuthorizationHandler :
+        AuthorizationHandler<OperationAuthorizationRequirement, BaseEntity>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Person resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
+            OperationAuthorizationRequirement requirement, BaseEntity resource)
         {
             if (context.User == null)
             {
