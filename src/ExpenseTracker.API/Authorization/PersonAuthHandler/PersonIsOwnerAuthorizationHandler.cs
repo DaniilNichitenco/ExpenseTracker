@@ -27,7 +27,9 @@ namespace ExpenseTracker.API.Authorization.PersonAuthHandler
                 return Task.CompletedTask;
             }
 
-            if(resource.OwnerId.ToString() == _userManager.GetUserId(context.User))
+            var userId = context.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+
+            if (resource.OwnerId.ToString() == userId.Value)
             {
                 context.Succeed(requirement);
             }

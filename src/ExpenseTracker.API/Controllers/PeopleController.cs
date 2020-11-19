@@ -16,16 +16,19 @@ using Microsoft.AspNetCore.Authorization;
 namespace ExpenseTracker.API.Controllers
 {
     [Route("api/[controller]")]
+    //[AllowAnonymous]
     [ApiController]
     public class PeopleController : ControllerBase
     {
         private readonly IPersonRepository _repository;
         private readonly IMapper _mapper;
+        IAuthorizationService _authorizationService;
 
-        public PeopleController(IPersonRepository repository, IMapper mapper)
+        public PeopleController(IPersonRepository repository, IMapper mapper, IAuthorizationService authorizationService)
         {
             _repository = repository;
             _mapper = mapper;
+            _authorizationService = authorizationService;
         }
 
         // GET: api/People
@@ -41,11 +44,17 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // GET: api/People/5
-        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPerson(int id)
         {
             var person = await _repository.Get(id);
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, person, "Permission");
+
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
 
             if (person == null)
             {
@@ -97,7 +106,6 @@ namespace ExpenseTracker.API.Controllers
         // POST: api/People
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<Person>> CreatePerson([FromBody]PersonForUpdateDto personForUpdateDto)
         {
@@ -111,7 +119,6 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // DELETE: api/People/5
-        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {

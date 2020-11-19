@@ -18,7 +18,11 @@ namespace ExpenseTracker.API.Authorization.PersonAuthHandler
                 return Task.CompletedTask;
             }
 
-            if (context.User.IsInRole("admin"))
+            var roles = context.User.Claims.Where(c => c.Type == "Role");
+
+            var role = roles.FirstOrDefault(r => r.Value == "admin");
+
+            if(role != null)
             {
                 context.Succeed(requirement);
             }
