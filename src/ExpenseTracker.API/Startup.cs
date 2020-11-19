@@ -38,8 +38,8 @@ namespace ExpenseTracker.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<KestrelServerOptions>(
-                Configuration.GetSection("Kestrel"));
+            //services.Configure<KestrelServerOptions>(
+            //    Configuration.GetSection("Kestrel"));
 
             services.AddDbContext<ExpenseTrackerDbContext>(options => {
 
@@ -61,27 +61,29 @@ namespace ExpenseTracker.API
             services.AddJwtAuthentication(authOptions);
 
             ConfigureSwagger(services);
-            services.AddControllers();
-            //services.AddControllers(options =>
-            //{
-            //    var policy = new AuthorizationPolicyBuilder()
-            //                    .RequireAuthenticatedUser()
-            //                    .Build();
-            //    options.Filters.Add(new AuthorizeFilter(policy));
-            //});
-
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("Permission", policy =>
-            //        policy.Requirements.Add(new OperationAuthorizationRequirement()));
-            //}
-            //);
+            //services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+                                
+            });
 
 
-            //services.AddScoped<IAuthorizationHandler, PersonIsOwnerAuthorizationHandler>();
-            //services.AddSingleton<IAuthorizationHandler, PersonAdministratorsAuthorizationHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Permission", policy =>
+                    policy.Requirements.Add(new OperationAuthorizationRequirement()));
+            }
+            );
 
-            //services.AddAuthorization();
+
+
+            services.AddScoped<IAuthorizationHandler, PersonIsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, PersonAdministratorsAuthorizationHandler>();
+
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -120,6 +122,8 @@ namespace ExpenseTracker.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //app.UseHttpsRedirection();
 
             app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 

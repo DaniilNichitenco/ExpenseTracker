@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -51,8 +52,10 @@ namespace ExpenseTracker.API.Controllers
            
             if (checkingPasswordResult.Succeeded)
             {
-                var userId = _userManager.FindByNameAsync(userForLoginDto.Login).Id;
-                var encodedToken = GetJwtSecurityToken();
+                var user = await _userManager.FindByNameAsync(userForLoginDto.Login);
+                var userId = user.Id;
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var encodedToken = GetJwtSecurityToken(userId, userRoles as List<string>);
 
                 return Ok(new { AccessToken = encodedToken, userId });
             }
@@ -64,6 +67,8 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> SignUp(UserForSignUpDto userForSignUpDto)
         {
             var user = _mapper.Map<User>(userForSignUpDto);
+
+            var token = Request.Headers[HeaderNames.Authorization];
 
             await _userManager.CreateAsync(user, userForSignUpDto.Password);
 
@@ -82,13 +87,15 @@ namespace ExpenseTracker.API.Controllers
             return Ok(new { OwnerId = user.Id});
         }
 
-        private string GetJwtSecurityToken()
+        private string GetJwtSecurityToken(int userId, List<string> roles)
         {
+            List<Claim> _claims = new List<Claim>() { new Claim("UserId", userId.ToString()) };
+            roles.ForEach(r => _claims.Add(new Claim("Role", r)));
             var signingCredentials = new SigningCredentials(_authOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _authOptions.Issuer,
                 audience: _authOptions.Audience,
-                claims: new List<Claim>(),
+                claims: _claims,
                 expires: DateTime.Now.AddDays(30),
                 signingCredentials: signingCredentials
             );
