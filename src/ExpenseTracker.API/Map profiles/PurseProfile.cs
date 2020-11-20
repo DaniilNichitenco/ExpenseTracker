@@ -14,6 +14,7 @@ namespace ExpenseTracker.API.Map_profiles
         {
             CreateMap<Purse, PurseDto>().IncludeAllDerived();
             CreateMap<PurseForUpdateDto, Purse>().IncludeAllDerived();
+            CreateMap<PurseForCreateDto, Purse>().IncludeAllDerived();
         }
     }
 }

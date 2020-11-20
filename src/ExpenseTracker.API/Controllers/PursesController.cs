@@ -64,8 +64,8 @@ namespace ExpenseTracker.API.Controllers
             return Ok(pursesDto);
         }
 
-        [HttpGet("user/{id}")]
-        public async Task<IActionResult> GetUserPurses(int id)
+        [HttpGet("person/{id}")]
+        public async Task<IActionResult> GetPersonPurses(int id)
         {
             var purses = await _repository.Where(p => p.PersonId == id);
 
@@ -81,7 +81,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpPost("person/{id}")]
-        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForUpdateDto, int id)
+        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForCreateDto, int id)
         {
             var person = await _personRepository.Get(id);
             if(person == null)
@@ -96,9 +96,9 @@ namespace ExpenseTracker.API.Controllers
             }
 
             var user = await GetUserAsync();
-            var purse = PurseFactory.CreateEmptyPurse(purseForUpdateDto.CurrencyCode);
+            var purse = PurseFactory.CreateEmptyPurse(purseForCreateDto.CurrencyCode);
 
-            _mapper.Map(purseForUpdateDto, purse);
+            _mapper.Map(purseForCreateDto, purse);
             purse.OwnerId = user.Id;
 
             await _repository.Add(purse);
@@ -109,15 +109,9 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetPurse), new { id = purseDto.Id }, purseDto);
         }
 
-        [HttpPut("person/{id}")]
-        public async Task<IActionResult> UpdatePurse(int id, PurseForUpdateDto purseForUpdateDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdatePurse(PurseForUpdateDto purseForUpdateDto)
         {
-            var person = await _personRepository.Get(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
-
             var purse = await _repository.Get(purseForUpdateDto.Id);
             if(purse == null)
             {
@@ -146,7 +140,6 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            var user = await GetUserAsync();
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
             if (!AR.Succeeded)
             {
