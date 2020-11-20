@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
-using ExpenseTracker.API.Authorization.PersonAuthHandler;
+using ExpenseTracker.API.Authorization.BaseEntityAuthHandler;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace ExpenseTracker.API
@@ -81,8 +81,8 @@ namespace ExpenseTracker.API
 
 
 
-            services.AddScoped<IAuthorizationHandler, PersonIsOwnerAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, PersonAdministratorsAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, BaseEntityIsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, BaseEntityAdministratorsAuthorizationHandler>();
 
 
             services.AddScoped<INoteRepository, NoteRepository>();
