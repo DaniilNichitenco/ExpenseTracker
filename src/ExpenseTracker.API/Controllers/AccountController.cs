@@ -76,7 +76,7 @@ namespace ExpenseTracker.API.Controllers
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var encodedToken = GetJwtSecurityToken(userId, userRoles as List<string>);
 
-                return Ok(new { AccessToken = encodedToken, userId });
+                return Ok(new { AccessToken = encodedToken });
             }
             return Unauthorized();
         }
@@ -102,7 +102,7 @@ namespace ExpenseTracker.API.Controllers
 
             var encodedToken = GetJwtSecurityToken(user.Id, roles as List<string>);
 
-            return Ok(new { OwnerId = user.Id, AccessToken = encodedToken });
+            return Ok(new { AccessToken = encodedToken });
         }
 
         private string GetJwtSecurityToken(int userId, List<string> roles)
