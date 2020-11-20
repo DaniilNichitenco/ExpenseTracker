@@ -49,11 +49,11 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             Microsoft.AspNetCore.Identity.SignInResult checkingPasswordResult;
-            var userCheck = await _userManager.FindByEmailAsync(userForLoginDto.Login);
-            if(userCheck != null)
+            var userByEmail = await _userManager.FindByEmailAsync(userForLoginDto.Login);
+            if(userByEmail != null)
             {
                 checkingPasswordResult = await _signInManager.PasswordSignInAsync(
-                    userCheck.UserName, userForLoginDto.Password, false, false);
+                    userByEmail.UserName, userForLoginDto.Password, false, false);
             }
             else
             {
@@ -63,7 +63,15 @@ namespace ExpenseTracker.API.Controllers
            
             if (checkingPasswordResult.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(userForLoginDto.Login);
+                User user;
+                if (userByEmail == null)
+                {
+                    user = await _userManager.FindByNameAsync(userForLoginDto.Login);
+                }
+                else
+                {
+                    user = await _userManager.FindByEmailAsync(userForLoginDto.Login);
+                }
                 var userId = user.Id;
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var encodedToken = GetJwtSecurityToken(userId, userRoles as List<string>);
