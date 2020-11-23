@@ -73,7 +73,7 @@ namespace ExpenseTracker.API.Controllers
             return Ok(personDto);
         }
 
-        [HttpGet("owner")]
+        [HttpGet("personinfo")]
         public async Task<IActionResult> GetPerson()
         {
             var user = await GetUserAsync();
@@ -125,8 +125,8 @@ namespace ExpenseTracker.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Authorize(Roles = "admin")]
-        [HttpPost]
-        public async Task<ActionResult<Person>> CreatePerson([FromBody] PersonForUpdateDto personForUpdateDto, int userId)
+        [HttpPost("create/{userId}")]
+        public async Task<ActionResult<Person>> CreatePerson(int userId, [FromBody]PersonForUpdateDto personForUpdateDto)
         {
             var user = await GetUserAsync(userId);
             if(user == null)
@@ -141,6 +141,8 @@ namespace ExpenseTracker.API.Controllers
             await _repository.SaveChangesAsync();
 
             var personDto = _mapper.Map<PersonDto>(person);
+            personDto.Email = user.Email;
+            personDto.UserName = user.UserName;
 
             return CreatedAtAction(nameof(GetPerson), new { id = personDto.Id }, personDto);
         }
@@ -148,21 +150,14 @@ namespace ExpenseTracker.API.Controllers
         // DELETE: api/People/5
         [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePerson(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var person = await _repository.Get(id);
-            var user = await GetUserAsync(person.OwnerId);
 
             if (person == null)
             {
                 return NotFound();
             }
-
-            if(user != null)
-            {
-                await _userManager.DeleteAsync(user);
-            }
-
 
             _repository.Remove(person);
             await _repository.SaveChangesAsync();

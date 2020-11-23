@@ -52,6 +52,7 @@ namespace ExpenseTracker.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
             })
                 .AddRoles<Role>()
                 //.AddUserStore<UserStore>()

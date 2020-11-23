@@ -90,7 +90,7 @@ namespace ExpenseTracker.API.Controllers
 
             if(!IR.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(IR.Errors.FirstOrDefault().Description);
             }
 
             await EnsureRole(user.Id.ToString(), "user");
@@ -103,6 +103,24 @@ namespace ExpenseTracker.API.Controllers
             var encodedToken = GetJwtSecurityToken(user.Id, roles as List<string>);
 
             return Ok(new { AccessToken = encodedToken });
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAccout()
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var people = await _repository.Where(p => p.OwnerId.ToString() == userId);
+
+            _repository.RemoveRange(people);
+            await _userManager.DeleteAsync(user);
+
+            return NoContent();
         }
 
         private string GetJwtSecurityToken(int userId, List<string> roles)

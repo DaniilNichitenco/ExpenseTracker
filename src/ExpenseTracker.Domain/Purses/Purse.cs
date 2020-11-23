@@ -25,6 +25,7 @@ namespace ExpenseTracker.Domain.Purses
             }
         }
         public string CurrencyCode { get; set; }
+        public virtual ICollection<Expense> Expenses { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }
