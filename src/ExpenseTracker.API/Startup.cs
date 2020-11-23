@@ -90,7 +90,7 @@ namespace ExpenseTracker.API
 
 
             services.AddScoped<INoteRepository, NoteRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IUserInfoRepository, UserInfoRepository>();
             services.AddScoped<IOccasionRepository, OccasionRepository>();
             services.AddScoped<IPurseRepository, PurseRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();

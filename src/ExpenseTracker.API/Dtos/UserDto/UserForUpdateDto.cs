@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.People
+namespace ExpenseTracker.API.Dtos.UserDto
 {
-    public class PersonForUpdateDto
+    public class UserForUpdateDto
     {
         [Required]
         [StringLength(15, MinimumLength = 3)]

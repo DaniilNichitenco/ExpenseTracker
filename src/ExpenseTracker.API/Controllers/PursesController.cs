@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ExpenseTracker.API.Infrastructure.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,11 +22,11 @@ namespace ExpenseTracker.API.Controllers
         private readonly IMapper _mapper;
         private UserManager<User> _userManager;
         IAuthorizationService _authorizationService;
-        IPersonRepository _personRepository;
+        IUserInfoRepository _personRepository;
 
         public PursesController(IPurseRepository repository, IMapper mapper,
             UserManager<User> userManager, IAuthorizationService authorizationService,
-            IPersonRepository personRepository)
+            IUserInfoRepository personRepository)
         {
             _repository = repository;
             _mapper = mapper;
@@ -64,10 +64,10 @@ namespace ExpenseTracker.API.Controllers
             return Ok(pursesDto);
         }
 
-        [HttpGet("person/{id}")]
-        public async Task<IActionResult> GetPersonPurses(int id)
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserPurses(int userId)
         {
-            var purses = await _repository.Where(p => p.OwnerId == id);
+            var purses = await _repository.Where(p => p.OwnerId == userId);
 
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
             if (!AR.Succeeded)
@@ -80,22 +80,21 @@ namespace ExpenseTracker.API.Controllers
             return Ok(pursesDto);
         }
 
-        [HttpPost("person/{id}")]
-        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForCreateDto, int id)
+        [HttpGet("currentUser")]
+        public async Task<IActionResult> GetCurrentUserPurses()
         {
-            var person = await _personRepository.Get(id);
-            if(person == null)
-            {
-                return NotFound();
-            }
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+            var purses = await _repository.Where(p => p.OwnerId == userId);
 
-            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, person, "Permission");
-            if (!AR.Succeeded)
-            {
-                return Unauthorized();
-            }
+            List<PurseDto> pursesDto = new List<PurseDto>();
+            purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));
+            return Ok(pursesDto);
+        }
 
-            var user = await GetUserAsync();
+        [HttpPost]
+        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForCreateDto)
+        {
+            var user = await HttpContext.GetUserAsync(_userManager);
             var purse = PurseFactory.CreateEmptyPurse(purseForCreateDto.CurrencyCode);
 
             _mapper.Map(purseForCreateDto, purse);
@@ -150,12 +149,6 @@ namespace ExpenseTracker.API.Controllers
             await _repository.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private async Task<User> GetUserAsync()
-        {
-            var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
-            return await _userManager.FindByIdAsync(id);
         }
     }
 }
