@@ -102,7 +102,7 @@ namespace ExpenseTracker.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserInfo(int id, UserForUpdateDto userForUpdateDto)
+        public async Task<IActionResult> UpdateUserInfo(int id, [FromBody]UserForUpdateDto userForUpdateDto)
         {
             var userInfo = await _repository.Get(id);
             if (userInfo == null)
@@ -124,7 +124,22 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserInfo([FromBody]UserForUpdateDto userForUpdateDto)
+        {
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+            var userInfo = await _repository.Get(userId);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
 
+            _mapper.Map(userForUpdateDto, userInfo);
+            _repository.Update(userInfo);
+            await _repository.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

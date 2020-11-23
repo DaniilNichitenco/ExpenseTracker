@@ -122,6 +122,24 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccoutById(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var people = await _repository.Where(p => p.OwnerId == id);
+
+            _repository.RemoveRange(people);
+            await _userManager.DeleteAsync(user);
+
+            return NoContent();
+        }
+
         private string GetJwtSecurityToken(int userId, List<string> roles)
         {
             List<Claim> _claims = new List<Claim>() { new Claim("UserId", userId.ToString()) };

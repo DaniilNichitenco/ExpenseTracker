@@ -92,7 +92,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePurse([FromBody] PurseForCreateDto purseForCreateDto)
+        public async Task<IActionResult> CreatePurse([FromBody]PurseForCreateDto purseForCreateDto)
         {
             var user = await HttpContext.GetUserAsync(_userManager);
             var purse = PurseFactory.CreateEmptyPurse(purseForCreateDto.CurrencyCode);
@@ -108,10 +108,10 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetPurse), new { id = purseDto.Id }, purseDto);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdatePurse(PurseForUpdateDto purseForUpdateDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePurse([FromBody]PurseForUpdateDto purseForUpdateDto, int id)
         {
-            var purse = await _repository.Get(purseForUpdateDto.Id);
+            var purse = await _repository.Get(id);
             if(purse == null)
             {
                 return NotFound();
