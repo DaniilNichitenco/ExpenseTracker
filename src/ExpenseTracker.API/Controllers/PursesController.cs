@@ -67,7 +67,7 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("person/{id}")]
         public async Task<IActionResult> GetPersonPurses(int id)
         {
-            var purses = await _repository.Where(p => p.PersonId == id);
+            var purses = await _repository.Where(p => p.OwnerId == id);
 
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
             if (!AR.Succeeded)

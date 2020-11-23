@@ -140,7 +140,7 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("{year}")]
+        [HttpGet("year/{year}")]
         public async Task<IActionResult> GetExpensesForYearlyDiagram(int year)
         {
             var userId = HttpContext.GetUserIdFromToken();

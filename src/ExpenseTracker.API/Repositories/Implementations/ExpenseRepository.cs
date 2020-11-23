@@ -19,10 +19,11 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
         public async Task<IDictionary<string, IEnumerable<ExpensesPerMonthDto>>> GetMonthlyExpenses(int userId, int year)
         {
-            var allExpenses = await _context.Set<Expense>()
+            var allExpenses =  _context.Set<Expense>()
                 .Where(e => e.OwnerId == userId && e.Date.Year == year)
+                .AsEnumerable()
                 .GroupBy(e => e.PurseId)
-                .ToDictionaryAsync(g => g.Key.ToString(), g => g.GroupBy(grp => grp.Date.Month)
+                .ToDictionary(g => g.Key.ToString(), g => g.GroupBy(grp => grp.Date.Month)
                 .Select(e => new ExpensesPerMonthDto { Month = e.Key.ToString(), Money = e.Sum(ex => ex.Money) }));
 
 

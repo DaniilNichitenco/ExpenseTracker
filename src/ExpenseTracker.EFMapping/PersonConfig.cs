@@ -19,11 +19,6 @@ namespace ExpenseTracker.EFMapping
                 .IsRequired()
                 .HasMaxLength(15);
 
-            builder.HasMany(p => p.Purses)
-                .WithOne(p => p.Person)
-                .HasForeignKey(p => p.PersonId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasMany(p => p.Notes)
                 .WithOne(p => p.Person)
                 .HasForeignKey(p => p.PersonId)

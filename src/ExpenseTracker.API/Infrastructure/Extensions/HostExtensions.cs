@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Domain.Auth;
+﻿using ExpenseTracker.API.Repositories.Interfaces;
+using ExpenseTracker.Domain.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +22,14 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
                 try
                 {
                     var context = services.GetRequiredService<ExpenseTrackerDbContext>();
+                    var expenseRepository = services.GetRequiredService<IExpenseRepository>();
+                    var purseRepository = services.GetRequiredService<IPurseRepository>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
                     context.Database.Migrate();
 
-                    await Seed.SeedUsers(userManager, roleManager);
+                    await Seed.SeedUsers(userManager, roleManager, purseRepository, expenseRepository);
                 }
                 catch(Exception exception)
                 {

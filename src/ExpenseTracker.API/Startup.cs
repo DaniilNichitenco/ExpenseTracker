@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseTracker.API.Authorization.BaseEntityAuthHandler;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler;
 
 namespace ExpenseTracker.API
 {
@@ -84,12 +85,15 @@ namespace ExpenseTracker.API
 
             services.AddScoped<IAuthorizationHandler, BaseEntityIsOwnerAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, BaseEntityAdministratorsAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ListBaseEntityAdministratorsAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ListBaseEntityIsOwnerAuthorizationHandler>();
 
 
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IOccasionRepository, OccasionRepository>();
             services.AddScoped<IPurseRepository, PurseRepository>();
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
