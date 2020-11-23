@@ -8,7 +8,7 @@ namespace ExpenseTracker.Domain
     public class Expense : BaseEntity
     {
         public int PurseId { get; set; }
-        public Purse Purse { get; set; }
+        public virtual Purse Purse { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public double Money

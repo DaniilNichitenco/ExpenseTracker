@@ -230,3 +230,12 @@ D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Swa
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\System.Web.Http.dll
 D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\EntityFramework.SqlServer.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\EntityFramework.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\System.CodeDom.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.csproj.CoreCompileInputs.cache
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.MvcApplicationPartsAssemblyInfo.cs
+D:\vscommunity\ExpenseTracker\src\ExpenseTracker.API\obj\Debug\netcoreapp3.1\ExpenseTracker.API.MvcApplicationPartsAssemblyInfo.cache
