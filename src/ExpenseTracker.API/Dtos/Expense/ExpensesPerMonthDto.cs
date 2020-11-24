@@ -7,7 +7,7 @@ namespace ExpenseTracker.API.Dtos.Expense
 {
     public class ExpensesPerMonthDto
     {
-        public int PurseId { get; set; }
+        public string CurrencyCode { get; set; }
         public List<ExpensePerMonthDto> Expenses { get; set; }
     }
 }

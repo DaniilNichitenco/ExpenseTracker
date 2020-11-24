@@ -25,10 +25,10 @@ namespace ExpenseTracker.API.Repositories.Implementations
                 .Where(e => e.OwnerId == userId && e.Date.Year == year)
                 .AsEnumerable()
                 .GroupBy(e => e.PurseId)
-                .ToDictionary(g => g.Key.ToString(), g => g.GroupBy(grp => grp.Date.Month)
+                .ToDictionary(g => g.Select(e => e.Purse.CurrencyCode).FirstOrDefault(), g => g.GroupBy(grp => grp.Date.Month)
                 .Select(e => new ExpensePerMonthDto { Month = e.Key, Money = e.Sum(ex => ex.Money) }).ToList());
 
-            var expenses = allExpenses.Select(e => new ExpensesPerMonthDto() { PurseId = int.Parse(e.Key), Expenses = e.Value });
+            var expenses = allExpenses.Select(e => new ExpensesPerMonthDto() { CurrencyCode = e.Key, Expenses = e.Value });
 
             foreach (var ex in expenses)
             {
