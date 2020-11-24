@@ -43,5 +43,43 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
             return expenses;
         }
+
+        public async Task<IEnumerable<ExpenseForSumDto>> GetSumForYear(int userId, int year)
+        {
+            var expenses = await Where(e => e.OwnerId == userId && e.Date.Year == year);
+            var groupSum = expenses.GroupBy(e => e.PurseId)
+                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+                    .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
+
+            return groupSum;
+        }
+
+        public async Task<IEnumerable<ExpenseForSumDto>> GetSumForMonth(int userId, int month)
+        {
+            var year = DateTime.Now.Year;
+            var expenses = await Where(e => e.OwnerId == userId && e.Date.Year == year && e.Date.Month == month);
+            var groupSum = expenses.GroupBy(e => e.PurseId)
+                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+                    .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
+
+            return groupSum;
+        }
+
+        public async Task<IEnumerable<ExpenseForSumDto>> GetSumForDay(int userId, int day)
+        {
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            var expenses = await Where(e => e.OwnerId == userId 
+                && e.Date.Year == year && e.Date.Month == month && e.Date.Day == day);
+            var groupSum = expenses.GroupBy(e => e.PurseId)
+                .Select(g => new ExpenseForSumDto()
+                {
+                    CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+                    .FirstOrDefault(),
+                    Sum = g.Sum(e => e.Money)
+                });
+
+            return groupSum;
+        }
     }
 }
