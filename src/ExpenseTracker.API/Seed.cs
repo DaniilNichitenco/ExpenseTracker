@@ -9,18 +9,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.API
-{
+{   
     public class Seed
     {
         public static async Task SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager,
-            IPurseRepository purseRepository, IExpenseRepository expenseRepository)
+            IPurseRepository purseRepository, IExpenseRepository expenseRepository,
+            IUserInfoRepository userInfoRepository)
         {
             if (!userManager.Users.Any())
             {
                 var user = new User()
                 {
                     UserName = "lagger179",
-                    Email = "daniilnikitenco@gmail1.com",
+                    Email = "daniilnikitenco@gmail.com",
                     EmailConfirmed = true
                 };
 
@@ -32,6 +33,7 @@ namespace ExpenseTracker.API
                 {
                     await SeedPurses(user.Id, purseRepository);
                     await SeedExpenses(user.Id, expenseRepository);
+                    await SeedUserInfo(user.Id, userInfoRepository);
                 }
             }
         }
@@ -66,6 +68,14 @@ namespace ExpenseTracker.API
             };
 
             await repository.AddRange(purses);
+            await repository.SaveChangesAsync();
+        }
+
+        private async static Task SeedUserInfo(int userId, IUserInfoRepository repository)
+        {
+            UserInfo userInfo = new UserInfo() { OwnerId = userId, FirstName = "Daniil", LastName = "Nichitenoc" };
+
+            await repository.Add(userInfo);
             await repository.SaveChangesAsync();
         }
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExpenseTracker.API.Dtos.People;
+using ExpenseTracker.API.Dtos.UserDto;
 using ExpenseTracker.Domain;
 using System;
 using System.Collections.Generic;
@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Map_profiles
 {
-    public class PersonProfile : Profile
+    public class UserInfoProfile : Profile
     {
-        public PersonProfile()
+        public UserInfoProfile()
         {
-            CreateMap<Person, PersonDto>();
-            CreateMap<PersonForUpdateDto, Person>();
+            CreateMap<UserInfo, UserDto>();
+            CreateMap<UserForUpdateDto, UserInfo>();
         }
     }
 }

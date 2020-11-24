@@ -21,7 +21,6 @@ namespace ExpenseTracker.EFMapping
             builder.Property(p => p.Money)
                 .IsRequired();
 
-
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Repositories.Interfaces
 {
-    public interface IPersonRepository : IRepository<Person>
+    public interface IUserInfoRepository : IRepository<UserInfo>
     {
     }
 }
