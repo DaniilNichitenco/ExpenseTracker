@@ -7,7 +7,7 @@ namespace ExpenseTracker.API.Dtos.Expense
 {
     public class ExpensesPerMonthDto
     {
-        public string Month { get; set; }
+        public int Month { get; set; }
         public double Money { get; set; }
     }
 }

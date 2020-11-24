@@ -140,14 +140,27 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("year/{year}")]
-        public async Task<IActionResult> GetExpensesForYearlyDiagram(int year)
+        [HttpGet("year")]
+        public IActionResult GetExpensesForCurrentYear()
         {
             var userId = HttpContext.GetUserIdFromToken();
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
 
-            var expenses = await _repository.GetMonthlyExpenses(int.Parse(userId), year);
+            var expenses = _repository.GetExpensesForYear(int.Parse(userId), year);
 
-            if(expenses == null)
+            foreach (var ex in expenses)
+            {
+                for (int i = 1; i <= month; i++)
+                {
+                    if (!ex.Value.Any(e => e.Month == i))
+                    {
+                        ex.Value.Insert(i - 1, new ExpensesPerMonthDto() { Money = 0, Month = i });
+                    }
+                }
+            }
+
+            if (expenses == null)
             {
                 return NotFound();
             }

@@ -9,6 +9,6 @@ namespace ExpenseTracker.API.Repositories.Interfaces
 {
     public interface IExpenseRepository : IRepository<Expense>
     {
-        Task<IDictionary<string, IEnumerable<ExpensesPerMonthDto>>> GetMonthlyExpenses(int userId, int year);
+        IDictionary<string, List<ExpensesPerMonthDto>> GetExpensesForYear(int userId, int year);
     }
 }
