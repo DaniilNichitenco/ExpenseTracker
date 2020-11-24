@@ -145,20 +145,9 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = HttpContext.GetUserIdFromToken();
             var year = DateTime.Now.Year;
-            var month = DateTime.Now.Month;
 
             var expenses = _repository.GetExpensesForYear(int.Parse(userId), year);
 
-            foreach (var ex in expenses)
-            {
-                for (int i = 1; i <= month; i++)
-                {
-                    if (!ex.Value.Any(e => e.Month == i))
-                    {
-                        ex.Value.Insert(i - 1, new ExpensesPerMonthDto() { Money = 0, Month = i });
-                    }
-                }
-            }
 
             if (expenses == null)
             {

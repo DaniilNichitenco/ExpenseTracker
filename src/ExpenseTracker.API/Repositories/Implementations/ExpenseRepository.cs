@@ -17,17 +17,31 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
         }
 
-        public IDictionary<string, List<ExpensesPerMonthDto>> GetExpensesForYear(int userId, int year)
+        public IEnumerable<ExpensesPerMonthDto> GetExpensesForYear(int userId, int year)
         {
+            var month = DateTime.Now.Month;
+
             var allExpenses =  _context.Set<Expense>()
                 .Where(e => e.OwnerId == userId && e.Date.Year == year)
                 .AsEnumerable()
                 .GroupBy(e => e.PurseId)
                 .ToDictionary(g => g.Key.ToString(), g => g.GroupBy(grp => grp.Date.Month)
-                .Select(e => new ExpensesPerMonthDto { Month = e.Key, Money = e.Sum(ex => ex.Money) }).ToList());
+                .Select(e => new ExpensePerMonthDto { Month = e.Key, Money = e.Sum(ex => ex.Money) }).ToList());
 
+            var expenses = allExpenses.Select(e => new ExpensesPerMonthDto() { PurseId = int.Parse(e.Key), Expenses = e.Value });
 
-            return allExpenses;
+            foreach (var ex in expenses)
+            {
+                for (int i = 1; i <= month; i++)
+                {
+                    if (!ex.Expenses.Any(e => e.Month == i))
+                    {
+                        ex.Expenses.Insert(i - 1, new ExpensePerMonthDto() { Money = 0, Month = i });
+                    }
+                }
+            }
+
+            return expenses;
         }
     }
 }

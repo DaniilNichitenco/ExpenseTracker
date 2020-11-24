@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Dtos.Expense
 {
-    public class ExpensesPerMonthDto
+    public class ExpensePerMonthDto
     {
         public int Month { get; set; }
         public double Money { get; set; }
