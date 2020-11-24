@@ -140,19 +140,72 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("year/{year}")]
-        public async Task<IActionResult> GetExpensesForYearlyDiagram(int year)
+        [HttpGet("year")]
+        public IActionResult GetExpensesForCurrentYear()
         {
             var userId = HttpContext.GetUserIdFromToken();
+            var year = DateTime.Now.Year;
 
-            var expenses = await _repository.GetMonthlyExpenses(int.Parse(userId), year);
+            var expenses = _repository.GetExpensesForYear(int.Parse(userId), year);
 
-            if(expenses == null)
+
+            if (expenses == null)
             {
                 return NotFound();
             }
 
             return Ok(new { expenses });
+        }
+
+        [HttpGet("sum/year")]
+        public async Task<IActionResult> GetSumForCurrentYear()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var year = DateTime.Now.Year;
+
+            var sums = await _repository.GetSumForYear(int.Parse(userId), year);
+
+
+            if (sums == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { sums });
+        }
+
+        [HttpGet("sum/month")]
+        public async Task<IActionResult> GetSumForCurrentMonth()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var month = DateTime.Now.Year;
+
+            var sums = await _repository.GetSumForMonth(int.Parse(userId), month);
+
+
+            if (sums == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { sums });
+        }
+
+        [HttpGet("sum/today")]
+        public async Task<IActionResult> GetSumForCurrentDay()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var day = DateTime.Now.Day;
+
+            var sums = await _repository.GetSumForDay(int.Parse(userId), day);
+
+
+            if (sums == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { sums });
         }
     }
 }

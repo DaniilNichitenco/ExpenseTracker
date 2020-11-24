@@ -4,7 +4,7 @@ using ExpenseTracker.API.Dtos.UserDto;
 using ExpenseTracker.Domain;
 using ExpenseTracker.Domain.Auth;
 
-namespace ExpenseTracker.API.Map_profiles
+namespace ExpenseTracker.API.Profiles
 {
     public class UserProfile : Profile
     {
