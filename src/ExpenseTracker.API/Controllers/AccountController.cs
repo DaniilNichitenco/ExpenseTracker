@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using ExpenseTracker.API.Dtos.Account;
-using ExpenseTracker.API.Dtos.People;
+using ExpenseTracker.API.Dtos.UserDto;
 using ExpenseTracker.API.Infrastructure.Configurations;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -30,11 +29,11 @@ namespace ExpenseTracker.API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         RoleManager<Role> _roleManager;
-        IPersonRepository _repository;
+        IUserInfoRepository _repository;
 
         public AccountController(IOptions<AuthOptions> options, SignInManager<User> signInManager,
             UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager,
-            IPersonRepository repository)
+            IUserInfoRepository repository)
         {
             _authOptions = options.Value;
             _signInManager = signInManager;
@@ -90,19 +89,63 @@ namespace ExpenseTracker.API.Controllers
 
             if(!IR.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(IR.Errors.FirstOrDefault().Description);
             }
 
             await EnsureRole(user.Id.ToString(), "user");
 
-            var person = _mapper.Map<PersonForUpdateDto>(userForSignUpDto);
-            await CreatePerson(person, user.Id);
+            var userInfo = _mapper.Map<UserForUpdateDto>(userForSignUpDto);
+            await CreateUserInfo(userInfo, user.Id);
 
             var roles = await _userManager.GetRolesAsync(user);
+
+            var SR = await _signInManager.PasswordSignInAsync(
+                user.UserName, userForSignUpDto.Password, false, false);
+
+            if (!SR.Succeeded)
+            {
+                return BadRequest(new { message = "Cannot sign in this user" });
+            }
 
             var encodedToken = GetJwtSecurityToken(user.Id, roles as List<string>);
 
             return Ok(new { AccessToken = encodedToken });
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAccout()
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            var people = await _repository.Where(p => p.OwnerId.ToString() == userId);
+
+            _repository.RemoveRange(people);
+            await _userManager.DeleteAsync(user);
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccoutById(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var people = await _repository.Where(p => p.OwnerId == id);
+
+            _repository.RemoveRange(people);
+            await _userManager.DeleteAsync(user);
+
+            return NoContent();
         }
 
         private string GetJwtSecurityToken(int userId, List<string> roles)
@@ -142,15 +185,15 @@ namespace ExpenseTracker.API.Controllers
             return IR;
         }
 
-        private async Task<ActionResult<Person>> CreatePerson(PersonForUpdateDto personForUpdateDto, int userId)
+        private async Task<ActionResult<UserInfo>> CreateUserInfo(UserForUpdateDto userForUpdateDto, int userId)
         {
-            var person = _mapper.Map<Person>(personForUpdateDto);
-            person.OwnerId = userId;
+            var userInfo = _mapper.Map<UserInfo>(userForUpdateDto);
+            userInfo.OwnerId = userId;
 
-            await _repository.Add(person);
+            await _repository.Add(userInfo);
             await _repository.SaveChangesAsync();
 
-            return Ok();
+            return Ok(userInfo);
         }
     }
 }

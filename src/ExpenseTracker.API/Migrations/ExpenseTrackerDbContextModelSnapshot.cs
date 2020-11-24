@@ -216,6 +216,40 @@ namespace ExpenseTracker.API.Migrations
                     b.ToTable("UserRoles","Auth");
                 });
 
+            modelBuilder.Entity("ExpenseTracker.Domain.Expense", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Money")
+                        .HasColumnType("float");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PurseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurseId");
+
+                    b.ToTable("Expense");
+                });
+
             modelBuilder.Entity("ExpenseTracker.Domain.Note", b =>
                 {
                     b.Property<int>("Id")
@@ -293,9 +327,6 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(15)")
@@ -308,9 +339,6 @@ namespace ExpenseTracker.API.Migrations
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -341,17 +369,12 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Purses");
 
@@ -430,6 +453,15 @@ namespace ExpenseTracker.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ExpenseTracker.Domain.Expense", b =>
+                {
+                    b.HasOne("ExpenseTracker.Domain.Purses.Purse", "Purse")
+                        .WithMany("Expenses")
+                        .HasForeignKey("PurseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ExpenseTracker.Domain.Note", b =>
                 {
                     b.HasOne("ExpenseTracker.Domain.Person", "Person")
@@ -443,15 +475,6 @@ namespace ExpenseTracker.API.Migrations
                 {
                     b.HasOne("ExpenseTracker.Domain.Person", "Person")
                         .WithMany("Occasions")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
-                {
-                    b.HasOne("ExpenseTracker.Domain.Person", "Person")
-                        .WithMany("Purses")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

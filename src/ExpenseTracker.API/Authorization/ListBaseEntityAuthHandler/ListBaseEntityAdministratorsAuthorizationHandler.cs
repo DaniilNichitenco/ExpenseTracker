@@ -11,16 +11,11 @@ using System.Threading.Tasks;
 namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
 {
     public class ListBaseEntityAdministratorsAuthorizationHandler :
-        AuthorizationHandler<OperationAuthorizationRequirement, BaseEntity>
+        AuthorizationHandler<OperationAuthorizationRequirement, IEnumerable<BaseEntity>>
     {
-        UserManager<User> _userManager;
-        public ListBaseEntityAdministratorsAuthorizationHandler(UserManager<User> userManager)
-        {
-            _userManager = userManager;
-        }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
-            OperationAuthorizationRequirement requirement, BaseEntity resource)
+            OperationAuthorizationRequirement requirement, IEnumerable<BaseEntity> resource)
         {
             if (context.User == null || resource == null)
             {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ExpenseTracker.API.Dtos.Account;
-using ExpenseTracker.API.Dtos.People;
+using ExpenseTracker.API.Dtos.UserDto;
 using ExpenseTracker.Domain;
 using ExpenseTracker.Domain.Auth;
 
@@ -11,8 +11,8 @@ namespace ExpenseTracker.API.Map_profiles
         public UserProfile()
         {
             CreateMap<UserForSignUpDto, User>();
-            CreateMap<UserForSignUpDto, Person>(); 
-            CreateMap<UserForSignUpDto, PersonForUpdateDto>();
+            CreateMap<UserForSignUpDto, UserInfo>(); 
+            CreateMap<UserForSignUpDto, UserForUpdateDto>();
         }
     }
 }

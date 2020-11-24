@@ -6,8 +6,6 @@ namespace ExpenseTracker.Domain.Purses
 {
     public abstract class Purse : BaseEntity
     {
-        public int PersonId { get; set; }
-        public virtual Person Person { get; set; }
         double _bill;
         public double Bill
         {
@@ -25,6 +23,7 @@ namespace ExpenseTracker.Domain.Purses
             }
         }
         public string CurrencyCode { get; set; }
+        public virtual ICollection<Expense> Expenses { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }

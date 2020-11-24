@@ -14,7 +14,7 @@ namespace ExpenseTracker.API
         {
 
         }
-        public DbSet<Person> People { get; set; }
+        public DbSet<UserInfo> People { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Purse> Purses { get; set; }
         public DbSet<Occasion> Occasions { get; set; }
@@ -25,7 +25,7 @@ namespace ExpenseTracker.API
 
             var assemblyNote = typeof(NoteConfig).Assembly;
             var assemblyOccasion = typeof(OccasionConfig).Assembly;
-            var assemblyProfile = typeof(PersonConfig).Assembly;
+            var assemblyProfile = typeof(UserInfoConfig).Assembly;
             var assemblyPurse = typeof(PurseConfig).Assembly;
 
             modelBuilder.ApplyConfigurationsFromAssembly(assemblyNote);

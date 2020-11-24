@@ -20,6 +20,11 @@ namespace ExpenseTracker.EFMapping
 
             builder.Property(p => p.RowVersion)
                 .IsRowVersion();
+
+            builder.HasMany(p => p.Expenses)
+                .WithOne(e => e.Purse)
+                .HasForeignKey(e => e.PurseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

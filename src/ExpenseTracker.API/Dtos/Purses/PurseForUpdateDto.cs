@@ -8,8 +8,6 @@ namespace ExpenseTracker.API.Dtos.Purses
 {
     public class PurseForUpdateDto
     {
-        [Required]
-        public int Id { get; set; }
 
         [Required]
         [Range(0.0d, Double.MaxValue)]

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
 {
     public class ListBaseEntityIsOwnerAuthorizationHandler :
-        AuthorizationHandler<OperationAuthorizationRequirement, List<BaseEntity>>
+        AuthorizationHandler<OperationAuthorizationRequirement, IEnumerable<BaseEntity>>
     {
         UserManager<User> _userManager;
         public ListBaseEntityIsOwnerAuthorizationHandler(UserManager<User> userManager)
@@ -20,7 +20,7 @@ namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
         }
         protected override Task HandleRequirementAsync
             (AuthorizationHandlerContext context,
-            OperationAuthorizationRequirement requirement, List<BaseEntity> resource)
+            OperationAuthorizationRequirement requirement, IEnumerable<BaseEntity> resource)
         {
             bool permission = true;
 
@@ -32,13 +32,13 @@ namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
 
             var userId = context.User.Claims.FirstOrDefault(c => c.Type == "UserId");
 
-            resource.ForEach(e =>
+            foreach(var e in resource)
             {
                 if (e.OwnerId.ToString() != userId.Value)
                 {
                     permission = false;
                 }
-            });
+            }
 
             if (permission)
             {
