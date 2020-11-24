@@ -99,6 +99,14 @@ namespace ExpenseTracker.API.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
+            var SR = await _signInManager.PasswordSignInAsync(
+                user.UserName, userForSignUpDto.Password, false, false);
+
+            if (!SR.Succeeded)
+            {
+                return BadRequest(new { message = "Cannot sign in this user" });
+            }
+
             var encodedToken = GetJwtSecurityToken(user.Id, roles as List<string>);
 
             return Ok(new { AccessToken = encodedToken });

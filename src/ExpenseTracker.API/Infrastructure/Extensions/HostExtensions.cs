@@ -24,12 +24,14 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
                     var context = services.GetRequiredService<ExpenseTrackerDbContext>();
                     var expenseRepository = services.GetRequiredService<IExpenseRepository>();
                     var purseRepository = services.GetRequiredService<IPurseRepository>();
+                    var userInfoRepository = services.GetRequiredService<IUserInfoRepository>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<Role>>();
 
                     context.Database.Migrate();
 
-                    await Seed.SeedUsers(userManager, roleManager, purseRepository, expenseRepository);
+                    await Seed.SeedUsers(userManager, roleManager, purseRepository, expenseRepository,
+                        userInfoRepository);
                 }
                 catch(Exception exception)
                 {
