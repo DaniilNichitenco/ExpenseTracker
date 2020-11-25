@@ -33,11 +33,17 @@ namespace ExpenseTracker.API.Controllers
             _authorizationService = authorizationService;
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAllExpenses()
         {
             var expenses = await _repository.GetAll();
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expenses, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Forbid();
+            }
+
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
             return Ok(expensesDto);
@@ -55,7 +61,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expense, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             var expenseDto = _mapper.Map<ExpenseDto>(expense);
@@ -72,7 +78,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expenses, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
@@ -109,7 +115,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expense, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             _mapper.Map(expenseForUpdateDto, expense);
@@ -131,7 +137,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expense, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             _repository.Remove(expense);

@@ -8,7 +8,7 @@ namespace ExpenseTracker.Domain.Purses
     {
         public PurseMDL()
         {
-            CurrencyCode = "MDL";
+            CurrencyCode = "mdl";
         }
     }
 }
