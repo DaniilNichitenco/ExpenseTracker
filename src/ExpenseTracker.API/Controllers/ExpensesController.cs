@@ -21,8 +21,8 @@ namespace ExpenseTracker.API.Controllers
     {
         private readonly IExpenseRepository _repository;
         private readonly IMapper _mapper;
-        private UserManager<User> _userManager;
-        IAuthorizationService _authorizationService;
+        private readonly UserManager<User> _userManager;
+        private readonly IAuthorizationService _authorizationService;
 
         public ExpensesController(IExpenseRepository repository, IMapper mapper,
             UserManager<User> userManager, IAuthorizationService authorizationService)

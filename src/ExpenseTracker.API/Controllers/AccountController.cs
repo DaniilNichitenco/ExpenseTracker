@@ -28,8 +28,8 @@ namespace ExpenseTracker.API.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        RoleManager<Role> _roleManager;
-        IUserInfoRepository _repository;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly IUserInfoRepository _repository;
 
         public AccountController(IOptions<AuthOptions> options, SignInManager<User> signInManager,
             UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager,
