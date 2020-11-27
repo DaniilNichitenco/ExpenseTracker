@@ -11,11 +11,11 @@ namespace ExpenseTracker.Domain.Purses
             
             switch (currencyCode)
             {
-                case "MDL":
+                case "mdl":
                     return CreatePurseMDL(0);
-                case "USD":
+                case "usd":
                     return CreatePurseUSD(0);
-                case "EUR":
+                case "eur":
                     return CreatePurseEUR(0);
                 default:
                     throw new ArgumentException($"Cannot create {currencyCode} purse");

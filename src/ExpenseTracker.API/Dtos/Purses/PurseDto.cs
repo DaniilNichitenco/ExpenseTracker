@@ -9,7 +9,7 @@ namespace ExpenseTracker.API.Dtos.Purses
     {
         public int Id { get; set; }
 
-        double _bill;
+        private double _bill;
         public double Bill
         {
             get

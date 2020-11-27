@@ -8,7 +8,7 @@ namespace ExpenseTracker.Domain.Purses
     {
         public PurseUSD()
         {
-            CurrencyCode = "USD";
+            CurrencyCode = "usd";
         }
     }
 }

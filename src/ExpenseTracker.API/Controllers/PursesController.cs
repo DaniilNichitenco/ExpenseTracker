@@ -20,9 +20,9 @@ namespace ExpenseTracker.API.Controllers
     {
         private readonly IPurseRepository _repository;
         private readonly IMapper _mapper;
-        private UserManager<User> _userManager;
-        IAuthorizationService _authorizationService;
-        IUserInfoRepository _personRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserInfoRepository _personRepository;
 
         public PursesController(IPurseRepository repository, IMapper mapper,
             UserManager<User> userManager, IAuthorizationService authorizationService,
@@ -47,18 +47,24 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             var purseDto = _mapper.Map<PurseDto>(purse);
             return Ok(purseDto);
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllPurses()
         {
             var purses = await _repository.GetAll();
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Forbid();
+            }
+
             List<PurseDto> pursesDto = new List<PurseDto>();
             purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));
             return Ok(pursesDto);
@@ -72,7 +78,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             List<PurseDto> pursesDto = new List<PurseDto>();
@@ -120,7 +126,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             _mapper.Map(purseForUpdateDto, purse);
@@ -142,7 +148,7 @@ namespace ExpenseTracker.API.Controllers
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purse, "Permission");
             if (!AR.Succeeded)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             _repository.Remove(purse);
