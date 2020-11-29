@@ -14,10 +14,12 @@ namespace ExpenseTracker.API
         {
 
         }
-        public DbSet<UserInfo> People { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
         public DbSet<Purse> Purses { get; set; }
         public DbSet<Occasion> Occasions { get; set; }
+        public DbSet<Topic> Topics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +29,7 @@ namespace ExpenseTracker.API
             var assemblyOccasion = typeof(OccasionConfig).Assembly;
             var assemblyProfile = typeof(UserInfoConfig).Assembly;
             var assemblyPurse = typeof(PurseConfig).Assembly;
+            var assemblyTopic = typeof(TopicConfig).Assembly;
 
             modelBuilder.ApplyConfigurationsFromAssembly(assemblyNote);
 

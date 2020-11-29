@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using ExpenseTracker.API.Dtos.Expense;
+using ExpenseTracker.API.Dtos.Expenses;
 using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;

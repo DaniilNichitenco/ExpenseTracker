@@ -14,7 +14,7 @@ namespace ExpenseTracker.API
     {
         public static async Task SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager,
             IPurseRepository purseRepository, IExpenseRepository expenseRepository,
-            IUserInfoRepository userInfoRepository)
+            IUserInfoRepository userInfoRepository, ITopicRepository topicRepository)
         {
             if (!userManager.Users.Any())
             {
@@ -32,6 +32,7 @@ namespace ExpenseTracker.API
                 if (IR.Succeeded)
                 {
                     await SeedPurses(user.Id, purseRepository);
+                    await SeedTopics(user.Id, topicRepository);
                     await SeedExpenses(user.Id, expenseRepository);
                     await SeedUserInfo(user.Id, userInfoRepository);
                 }
@@ -71,9 +72,23 @@ namespace ExpenseTracker.API
             await repository.SaveChangesAsync();
         }
 
+        private async static Task SeedTopics(int userId, ITopicRepository repository)
+        {
+            List<Topic> topics = new List<Topic>()
+            {
+                new Topic(){ Name = "Food", OwnerId = userId },
+                new Topic(){ Name = "Transport", OwnerId = userId },
+                new Topic(){ Name = "Amusement", OwnerId = userId },
+                new Topic(){ Name = "Others", OwnerId = userId },
+        };
+
+            await repository.AddRange(topics);
+            await repository.SaveChangesAsync();
+        }
+
         private async static Task SeedUserInfo(int userId, IUserInfoRepository repository)
         {
-            UserInfo userInfo = new UserInfo() { OwnerId = userId, FirstName = "Daniil", LastName = "Nichitenoc" };
+            UserInfo userInfo = new UserInfo() { OwnerId = userId, FirstName = "Daniil", LastName = "Nichitenco" };
 
             await repository.Add(userInfo);
             await repository.SaveChangesAsync();
@@ -83,18 +98,30 @@ namespace ExpenseTracker.API
         {
             List<Expense> expenses = new List<Expense>()
             {
-                new Expense() { OwnerId = userId, Title="First expense", Date=new DateTime(2020, 1, 1), Money=300, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="Second expense", Date=new DateTime(2020, 1, 2), Money=300, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="3 expense", Date=new DateTime(2020, 2, 3), Money=400, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="4 expense", Date=new DateTime(2020, 2, 4), Money=400, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="5 expense", Date=new DateTime(2020, 3, 5), Money=200, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="6 expense", Date=new DateTime(2020, 3, 6), Money=100, PurseId=1 },
-                new Expense() { OwnerId = userId, Title="7 expense", Date=new DateTime(2020, 1, 7), Money=400, PurseId=2 },
-                new Expense() { OwnerId = userId, Title="8 expense", Date=new DateTime(2020, 1, 8), Money=400, PurseId=2 },
-                new Expense() { OwnerId = userId, Title="9 expense", Date=new DateTime(2020, 2, 9), Money=200, PurseId=2 },
-                new Expense() { OwnerId = userId, Title="10 expense", Date=new DateTime(2020, 2, 10), Money=100, PurseId=2 },
-                new Expense() { OwnerId = userId, Title="11 expense", Date=new DateTime(2020, 3, 11), Money=100, PurseId=2 },
-                new Expense() { OwnerId = userId, Title="12 expense", Date=new DateTime(2020, 3, 12), Money=100, PurseId=2 },
+                new Expense() { OwnerId = userId, Title="First expense", 
+                    Date=new DateTime(2020, 1, 1), Money=300, PurseId=1, TopicId = 1 },
+                new Expense() { OwnerId = userId, Title="Second expense", 
+                    Date=new DateTime(2020, 1, 2), Money=300, PurseId=1, TopicId = 1 },
+                new Expense() { OwnerId = userId, Title="3 expense", 
+                    Date=new DateTime(2020, 2, 3), Money=400, PurseId=1, TopicId = 1 },
+                new Expense() { OwnerId = userId, Title="4 expense", 
+                    Date=new DateTime(2020, 2, 4), Money=400, PurseId=1, TopicId = 2 },
+                new Expense() { OwnerId = userId, Title="5 expense", 
+                    Date=new DateTime(2020, 3, 5), Money=200, PurseId=1, TopicId = 2 },
+                new Expense() { OwnerId = userId, Title="6 expense", 
+                    Date=new DateTime(2020, 3, 6), Money=100, PurseId=1, TopicId = 2 },
+                new Expense() { OwnerId = userId, Title="7 expense", 
+                    Date=new DateTime(2020, 1, 7), Money=400, PurseId=2, TopicId = 3 },
+                new Expense() { OwnerId = userId, Title="8 expense", 
+                    Date=new DateTime(2020, 1, 8), Money=400, PurseId=2, TopicId = 3 },
+                new Expense() { OwnerId = userId, Title="9 expense", 
+                    Date=new DateTime(2020, 2, 9), Money=200, PurseId=2, TopicId = 3 },
+                new Expense() { OwnerId = userId, Title="10 expense", 
+                    Date=new DateTime(2020, 2, 10), Money=100, PurseId=2, TopicId = 4 },
+                new Expense() { OwnerId = userId, Title="11 expense", 
+                    Date=new DateTime(2020, 3, 11), Money=100, PurseId=2, TopicId = 4 },
+                new Expense() { OwnerId = userId, Title="12 expense", 
+                    Date=new DateTime(2020, 3, 12), Money=100, PurseId=2, TopicId = 4 },
             };
 
             await repository.AddRange(expenses);
