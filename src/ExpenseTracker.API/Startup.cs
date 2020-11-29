@@ -94,6 +94,7 @@ namespace ExpenseTracker.API
             services.AddScoped<IOccasionRepository, OccasionRepository>();
             services.AddScoped<IPurseRepository, PurseRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
+            services.AddScoped<ITopicRepository, TopicRepository>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

@@ -9,6 +9,8 @@ namespace ExpenseTracker.Domain
     {
         public int PurseId { get; set; }
         public virtual Purse Purse { get; set; }
+        public int TopicId { get; set; }
+        public virtual Topic Topic { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public double Money

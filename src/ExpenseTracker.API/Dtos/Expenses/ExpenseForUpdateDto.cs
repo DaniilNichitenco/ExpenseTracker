@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Expense
+namespace ExpenseTracker.API.Dtos.Expenses
 {
     public class ExpenseForUpdateDto
     {

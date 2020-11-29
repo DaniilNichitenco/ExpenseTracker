@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Expense
+namespace ExpenseTracker.API.Dtos.Expenses
 {
     public class ExpenseDto
     {
-        public int Id;
+        public int Id { get; set; }
         public int PurseId { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;

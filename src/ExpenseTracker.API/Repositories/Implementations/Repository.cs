@@ -85,7 +85,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
             IQueryable<TEntity> entities = _context.Set<TEntity>();
             foreach(var includeProperty in includeProperties)
             {
-                entities = entities.Include(includeProperty);
+                entities = entities.Include(includeProperty).Take(10);
             }
 
             return entities;

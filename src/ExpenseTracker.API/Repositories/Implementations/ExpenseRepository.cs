@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExpenseTracker.API.Dtos.Expense;
+using ExpenseTracker.API.Dtos.Expenses;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
 using System;
