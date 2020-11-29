@@ -46,11 +46,10 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTopic(int id)
         {
-            var topics = await _repository.GetAll();
+            var topic = await _repository.Get(id);
 
-            List<TopicDto> topicsDto = new List<TopicDto>();
-            topics.ToList().ForEach(topic => topicsDto.Add(_mapper.Map<TopicDto>(topic)));
-            return Ok(topicsDto);
+            var topicDto = _mapper.Map<TopicDto>(topic);
+            return Ok(topicDto);
         }
 
         [HttpGet("topicsWithFixedExpenses/{count}")]
