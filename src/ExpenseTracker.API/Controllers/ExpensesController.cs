@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ExpenseTracker.API.Dtos.Expenses;
 using ExpenseTracker.API.Infrastructure.Extensions;
+using ExpenseTracker.API.Infrastructure.Models;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
 using ExpenseTracker.Domain.Auth;
@@ -78,6 +79,13 @@ namespace ExpenseTracker.API.Controllers
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
             return Ok(expensesDto);
+        }
+
+        [HttpPost("PaginatedSearch")]
+        public async Task<IActionResult> GetPagedExpenses([FromBody] PagedRequest request)
+        {
+            var pagedExpensesDto = await _repository.GetPagedData<ExpenseDto>(request);
+            return Ok(pagedExpensesDto);
         }
 
         [HttpGet("topic/{topicId}")]
