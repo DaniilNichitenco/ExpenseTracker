@@ -75,11 +75,17 @@ namespace ExpenseTracker.API.Controllers
 
             var expenses = await _repository.Where(e => e.OwnerId.ToString() == userId);
 
-            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expenses, "Permission");
-            if (!AR.Succeeded)
-            {
-                return Forbid();
-            }
+            List<ExpenseDto> expensesDto = new List<ExpenseDto>();
+            expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
+            return Ok(expensesDto);
+        }
+
+        [HttpGet("topic/{topicId}")]
+        public async Task<IActionResult> GetUserExpensesByTopicId(int topicId)
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+
+            var expenses = await _repository.Where(e => e.OwnerId.ToString() == userId && e.TopicId == topicId);
 
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
