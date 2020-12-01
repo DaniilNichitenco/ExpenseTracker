@@ -8,16 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
+namespace ExpenseTracker.API.Authorization.IEnumerableBaseEntityAuthHandler
 {
-    public class ListBaseEntityIsOwnerAuthorizationHandler :
+    public class IEnumerableBaseEntityIsOwnerAuthorizationHandler :
         AuthorizationHandler<OperationAuthorizationRequirement, IEnumerable<BaseEntity>>
     {
-        UserManager<User> _userManager;
-        public ListBaseEntityIsOwnerAuthorizationHandler(UserManager<User> userManager)
-        {
-            _userManager = userManager;
-        }
         protected override Task HandleRequirementAsync
             (AuthorizationHandlerContext context,
             OperationAuthorizationRequirement requirement, IEnumerable<BaseEntity> resource)

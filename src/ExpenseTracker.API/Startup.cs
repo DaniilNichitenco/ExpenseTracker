@@ -23,7 +23,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseTracker.API.Authorization.BaseEntityAuthHandler;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
-using ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler;
+using ExpenseTracker.API.Authorization.IEnumerableBaseEntityAuthHandler;
+using ExpenseTracker.API.Authorization.ExpenseDtoAuthHandler;
+using ExpenseTracker.API.Authorization.IEnumerableExpenseDtoAuthHandler;
 
 namespace ExpenseTracker.API
 {
@@ -85,8 +87,12 @@ namespace ExpenseTracker.API
 
             services.AddScoped<IAuthorizationHandler, BaseEntityIsOwnerAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, BaseEntityAdministratorsAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, ListBaseEntityAdministratorsAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, ListBaseEntityIsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, IEnumerableBaseEntityAdministratorsAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, IEnumerableBaseEntityIsOwnerAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ExpenseDtoAdministratorsAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ExpenseDtoIsOwnerAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoAdministratorsAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoIsOwnerAuthorizationHandler>();
 
 
             services.AddScoped<INoteRepository, NoteRepository>();

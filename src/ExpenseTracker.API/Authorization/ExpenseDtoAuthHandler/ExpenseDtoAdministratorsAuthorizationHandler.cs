@@ -1,21 +1,18 @@
-﻿using ExpenseTracker.Domain;
-using ExpenseTracker.Domain.Auth;
+﻿using ExpenseTracker.API.Dtos.Expenses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Authorization.ListBaseEntityAuthHandler
+namespace ExpenseTracker.API.Authorization.ExpenseDtoAuthHandler
 {
-    public class ListBaseEntityAdministratorsAuthorizationHandler :
-        AuthorizationHandler<OperationAuthorizationRequirement, IEnumerable<BaseEntity>>
+    public class ExpenseDtoAdministratorsAuthorizationHandler :
+        AuthorizationHandler<OperationAuthorizationRequirement, ExpenseDto>
     {
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, 
-            OperationAuthorizationRequirement requirement, IEnumerable<BaseEntity> resource)
+            OperationAuthorizationRequirement requirement, ExpenseDto resource)
         {
             if (context.User == null || resource == null)
             {
