@@ -61,7 +61,7 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
                 {
                     predicate.Append($" {requestFilters.LogicalOperators} ");
                 }
-                predicate.Append(requestFilters.Filters[i].Path + $".{nameof(string.Contains)}(@{i})");
+                predicate.Append(requestFilters.Filters[i].Path + $"==(@{i})");
             }
 
             if (requestFilters.Filters.Any())

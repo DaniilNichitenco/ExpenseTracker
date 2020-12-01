@@ -85,6 +85,13 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetPagedExpenses([FromBody] PagedRequest request)
         {
             var pagedExpensesDto = await _repository.GetPagedData<ExpenseDto>(request);
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, pagedExpensesDto.Items.ToList(), "Permission");
+            if (!AR.Succeeded)
+            {
+                return Forbid();
+            }
+
             return Ok(pagedExpensesDto);
         }
 

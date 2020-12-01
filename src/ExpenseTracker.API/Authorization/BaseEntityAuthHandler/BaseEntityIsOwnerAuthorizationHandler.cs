@@ -13,11 +13,6 @@ namespace ExpenseTracker.API.Authorization.BaseEntityAuthHandler
     public class BaseEntityIsOwnerAuthorizationHandler : 
         AuthorizationHandler<OperationAuthorizationRequirement, BaseEntity>
     {
-        UserManager<User> _userManager;
-        public BaseEntityIsOwnerAuthorizationHandler(UserManager<User> userManager)
-        {
-            _userManager = userManager;
-        }
         protected override Task HandleRequirementAsync
             (AuthorizationHandlerContext context, 
             OperationAuthorizationRequirement requirement, BaseEntity resource)
