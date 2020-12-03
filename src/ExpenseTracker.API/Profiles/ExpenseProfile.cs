@@ -13,8 +13,8 @@ namespace ExpenseTracker.API.Profiles
         public ExpenseProfile()
         {
             CreateMap<Expense, ExpenseDto>();
-            //CreateMap<PurseForUpdateDto, Purse>().IncludeAllDerived();
             CreateMap<ExpenseForCreateDto, Expense>();
+            CreateMap<ExpenseForUpdateDto, Expense>();
         }
     }
 }

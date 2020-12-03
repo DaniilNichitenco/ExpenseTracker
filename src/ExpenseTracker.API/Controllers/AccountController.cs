@@ -113,7 +113,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAccout()
+        public async Task<IActionResult> DeleteAccount()
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
             var user = await _userManager.FindByIdAsync(userId);

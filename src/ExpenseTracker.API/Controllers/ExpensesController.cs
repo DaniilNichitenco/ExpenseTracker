@@ -112,7 +112,6 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = HttpContext.GetUserIdFromToken();
 
-
             var expense = _mapper.Map<Expense>(expenseForCreateDto);
             expense.OwnerId = int.Parse(userId);
 

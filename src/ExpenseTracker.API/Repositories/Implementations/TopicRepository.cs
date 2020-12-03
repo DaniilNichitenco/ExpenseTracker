@@ -21,7 +21,8 @@ namespace ExpenseTracker.API.Repositories.Implementations
             { 
                 Id = t.Id,
                 Name = t.Name,
-                Expenses = t.Expenses.Where(e => e.OwnerId == userId).Take(count).ToList(),
+                Expenses = t.Expenses.Where(e => e.OwnerId == userId)
+                    .OrderByDescending(e => e.Date).Take(count).ToList(),
                 OwnerId = t.OwnerId,
                 CreatedAt = t.CreatedAt,
             }).ToList();
