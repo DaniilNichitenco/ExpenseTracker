@@ -96,7 +96,10 @@ namespace ExpenseTracker.API.Repositories.Implementations
                 .GroupBy(e => e.PurseId)
                 .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.TopicId)
                 .Select(e => new SumExpensesPerTopicDto { Topic = e.FirstOrDefault().Topic.Name, Sum = e.Sum(ex => ex.Money) }).ToList());
-            
+
+            var topics = _context.Set<Topic>().Where(t => t.OwnerId == userId);
+            var names = await topics.Select(t => t.Name).ToListAsync();
+
             foreach (var purse in allExpenses)
             {
                 double sum = 0;
@@ -111,6 +114,18 @@ namespace ExpenseTracker.API.Repositories.Implementations
                 {
                     topic.Sum = topic.Sum / sum * 100;
                 }
+            }
+
+            foreach(var purse in allExpenses)
+            {
+                for (int i = 0; i < names.Count(); i++)
+                {
+                    if (!purse.Value.Any(p => p.Topic == names[i]))
+                    {
+                        purse.Value.Insert(i, new SumExpensesPerTopicDto() { Topic = names[i], Sum = 0 });
+                    }
+                }
+                purse.Value.Sort((first, second) => first.Topic.CompareTo(second.Topic));
             }
 
             var percents = allExpenses.Select(e => new PercentsTopicExpense() { CurrencyCode = e.Key, Percents = e.Value });

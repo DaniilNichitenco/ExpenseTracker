@@ -24,17 +24,14 @@ namespace ExpenseTracker.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IAuthorizationService _authorizationService;
-        private readonly ITopicRepository _topicRepository;
 
         public ExpensesController(IExpenseRepository repository, IMapper mapper,
-            UserManager<User> userManager, IAuthorizationService authorizationService,
-            ITopicRepository topicRepository)
+            UserManager<User> userManager, IAuthorizationService authorizationService)
         {
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
             _authorizationService = authorizationService;
-            _topicRepository = topicRepository;
         }
 
         [HttpGet("percentsExpensesPerTopic")]
@@ -42,18 +39,6 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = HttpContext.GetUserIdFromToken();
             var percents = await _repository.GetPercentsExpensesPerTopicAsync(int.Parse(userId));
-            var topics = await _topicRepository.GetUserTopicNames(int.Parse(userId));
-
-            foreach(var p in percents)
-            {
-                foreach(var topic in topics)
-                {
-                    if(!p.Percents.Any(p => p.Topic == topic))
-                    {
-                        p.Percents.Add(new SumExpensesPerTopicDto() { Topic = topic, Sum = 0 });
-                    }
-                }
-            }
 
             return Ok(percents);
         }
