@@ -29,5 +29,13 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
             return topics;
         }
+
+        public async Task<IEnumerable<string>> GetUserTopicNames(int userId)
+        {
+            var topics = await Where(t => t.OwnerId == userId);
+            var names = topics.Select(t => t.Name);
+
+            return names;
+        }
     }
 }

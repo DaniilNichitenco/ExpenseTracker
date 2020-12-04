@@ -24,14 +24,47 @@ namespace ExpenseTracker.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IAuthorizationService _authorizationService;
+        private readonly ITopicRepository _topicRepository;
 
         public ExpensesController(IExpenseRepository repository, IMapper mapper,
-            UserManager<User> userManager, IAuthorizationService authorizationService)
+            UserManager<User> userManager, IAuthorizationService authorizationService,
+            ITopicRepository topicRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _userManager = userManager;
             _authorizationService = authorizationService;
+            _topicRepository = topicRepository;
+        }
+
+        [HttpGet("percentsExpensesPerTopic")]
+        public async Task<IActionResult> GetPercentsExpensesPerTopic()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var percents = await _repository.GetPercentsExpensesPerTopicAsync(int.Parse(userId));
+            var topics = await _topicRepository.GetUserTopicNames(int.Parse(userId));
+
+            foreach(var p in percents)
+            {
+                foreach(var topic in topics)
+                {
+                    if(!p.Percents.Any(p => p.Topic == topic))
+                    {
+                        p.Percents.Add(new SumExpensesPerTopicDto() { Topic = topic, Sum = 0 });
+                    }
+                }
+            }
+
+            return Ok(percents);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountUserExpenses()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            int count = await _repository.GetCountUserExpensesAsync(int.Parse(userId));
+
+            return Ok(count);
         }
 
         [HttpGet("all")]
@@ -167,12 +200,12 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpGet("year")]
-        public IActionResult GetExpensesForCurrentYear()
+        public async Task<IActionResult> GetExpensesForCurrentYear()
         {
             var userId = HttpContext.GetUserIdFromToken();
             var year = DateTime.Now.Year;
 
-            var expenses = _repository.GetExpensesForYear(int.Parse(userId), year);
+            var expenses = await _repository.GetExpensesForYearAsync(int.Parse(userId), year);
 
 
             if (expenses == null)
