@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Dtos.Expenses
 {
-    public class ExpensesPerMonthDto
+    public class PercentsTopicExpense
     {
         public string CurrencyCode { get; set; }
-        public IList<ExpensePerMonthDto> Expenses { get; set; }
+        public ICollection<SumExpensesPerTopicDto> Percents { get; set; }
     }
 }

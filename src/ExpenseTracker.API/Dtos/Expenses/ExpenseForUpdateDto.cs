@@ -24,5 +24,8 @@ namespace ExpenseTracker.API.Dtos.Expenses
         [Required]
         [Range(0.0d, Double.MaxValue)]
         public double Money { get; set; }
+
+        [Required]
+        public int TopicId { get; set; }
     }
 }
