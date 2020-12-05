@@ -42,9 +42,11 @@ namespace ExpenseTracker.API.Repositories.Implementations
                 {
                     if (!ex.Expenses.Any(e => e.Month == i))
                     {
-                        ex.Expenses.Insert(i - 1, new ExpensePerMonthDto() { Money = 0, Month = i });
+                        ex.Expenses.Add(new ExpensePerMonthDto() { Money = 0, Month = i });
                     }
                 }
+
+                ex.Expenses.Sort((f, s) => f.Month.CompareTo(s.Month));
             }
 
             return expenses;
@@ -125,6 +127,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
                         purse.Value.Insert(i, new SumExpensesPerTopicDto() { Topic = names[i], Sum = 0 });
                     }
                 }
+
                 purse.Value.Sort((first, second) => first.Topic.CompareTo(second.Topic));
             }
 

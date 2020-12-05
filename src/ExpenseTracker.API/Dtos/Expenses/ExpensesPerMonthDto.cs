@@ -8,6 +8,6 @@ namespace ExpenseTracker.API.Dtos.Expenses
     public class ExpensesPerMonthDto
     {
         public string CurrencyCode { get; set; }
-        public IList<ExpensePerMonthDto> Expenses { get; set; }
+        public List<ExpensePerMonthDto> Expenses { get; set; }
     }
 }
