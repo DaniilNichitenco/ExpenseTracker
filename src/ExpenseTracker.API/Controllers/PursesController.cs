@@ -73,7 +73,7 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserPurses(int userId)
         {
-            var purses = await _repository.Where(p => p.OwnerId == userId);
+            var purses = _repository.Where(p => p.OwnerId == userId);
 
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
             if (!AR.Succeeded)
@@ -90,7 +90,7 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetCurrentUserPurses()
         {
             var userId = int.Parse(HttpContext.GetUserIdFromToken());
-            var purses = await _repository.Where(p => p.OwnerId == userId);
+            var purses = _repository.Where(p => p.OwnerId == userId);
 
             List<PurseDto> pursesDto = new List<PurseDto>();
             purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));

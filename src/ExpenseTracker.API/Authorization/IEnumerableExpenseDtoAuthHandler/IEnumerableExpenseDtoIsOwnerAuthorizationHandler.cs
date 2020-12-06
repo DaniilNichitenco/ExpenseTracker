@@ -28,7 +28,7 @@ namespace ExpenseTracker.API.Authorization.IEnumerableExpenseDtoAuthHandler
                 return;
             }
 
-            var resource = await _repository.Where(r => resourceDto.Any(dto => dto.Id == r.Id));
+            var resource = _repository.Where(r => resourceDto.Any(dto => dto.Id == r.Id));
 
             var userId = context.User.Claims.FirstOrDefault(c => c.Type == "UserId");
 

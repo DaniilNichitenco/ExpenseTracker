@@ -122,7 +122,7 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            var people = await _repository.Where(p => p.OwnerId.ToString() == userId);
+            var people = _repository.Where(p => p.OwnerId.ToString() == userId);
 
             _repository.RemoveRange(people);
             await _userManager.DeleteAsync(user);
@@ -140,7 +140,7 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            var people = await _repository.Where(p => p.OwnerId == id);
+            var people = _repository.Where(p => p.OwnerId == id);
 
             _repository.RemoveRange(people);
             await _userManager.DeleteAsync(user);
