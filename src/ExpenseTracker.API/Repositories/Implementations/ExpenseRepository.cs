@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.API.Repositories.Implementations
@@ -18,6 +17,33 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
         }
 
+        public IEnumerable<ExpensesPerDaysDto> GetExpensesSumForCurrentMonth(int userId)
+        {
+            var date = DateTime.Now;
+            var countDays = DateTime.DaysInMonth(date.Year, date.Month);
+
+            var expenses = Where(e => e.OwnerId == userId && e.Date.Year == date.Year && e.Date.Month == date.Month)
+                .GroupBy(e => e.PurseId)
+                .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.Date.Day)
+                .Select(e => new ExpensePerDayDto() { Day = e.Key, Sum = e.Sum(exp => exp.Money)}).ToList());
+
+            foreach(var d in expenses)
+            {
+                for (int i = 1; i <= countDays; i++)
+                {
+                    if(!d.Value.Any(e => e.Day == i))
+                    {
+                        d.Value.Add(new ExpensePerDayDto() { Day = i, Sum = 0 });
+                    }
+                }
+                d.Value.Sort((f, s) => f.Day.CompareTo(s.Day));
+            }
+
+            var expensesPerDays = expenses.Select(e => new ExpensesPerDaysDto() { CurrencyCode = e.Key, ExpensesPerDay = e.Value });
+
+            return expensesPerDays;
+        }
+
         public async Task<int> GetCountUserExpensesAsync(int userId)
         {
             return await _context.Set<Expense>().Where(e => e.OwnerId == userId).CountAsync();
@@ -27,9 +53,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
         {
             var month = DateTime.Now.Month;
 
-            var allExpenses =  _context.Set<Expense>()
-                .Where(e => e.OwnerId == userId && e.Date.Year == year)
-                .AsEnumerable()
+            var allExpenses = Where(e => e.OwnerId == userId && e.Date.Year == year)
                 .GroupBy(e => e.PurseId)
                 .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.Date.Month)
                 .Select(e => new ExpensePerMonthDto { Month = e.Key, Money = e.Sum(ex => ex.Money) }).ToList());
@@ -42,9 +66,11 @@ namespace ExpenseTracker.API.Repositories.Implementations
                 {
                     if (!ex.Expenses.Any(e => e.Month == i))
                     {
-                        ex.Expenses.Insert(i - 1, new ExpensePerMonthDto() { Money = 0, Month = i });
+                        ex.Expenses.Add(new ExpensePerMonthDto() { Money = 0, Month = i });
                     }
                 }
+
+                ex.Expenses.Sort((f, s) => f.Month.CompareTo(s.Month));
             }
 
             return expenses;
@@ -52,7 +78,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
         public async Task<IEnumerable<ExpenseForSumDto>> GetSumForYear(int userId, int year)
         {
-            var expenses = await Where(e => e.OwnerId == userId && e.Date.Year == year);
+            var expenses = Where(e => e.OwnerId == userId && e.Date.Year == year);
             var groupSum = expenses.GroupBy(e => e.PurseId)
                 .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
                     .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
@@ -63,7 +89,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public async Task<IEnumerable<ExpenseForSumDto>> GetSumForMonth(int userId, int month)
         {
             var year = DateTime.Now.Year;
-            var expenses = await Where(e => e.OwnerId == userId && e.Date.Year == year && e.Date.Month == month);
+            var expenses = Where(e => e.OwnerId == userId && e.Date.Year == year && e.Date.Month == month);
             var groupSum = expenses.GroupBy(e => e.PurseId)
                 .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
                     .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
@@ -75,7 +101,7 @@ namespace ExpenseTracker.API.Repositories.Implementations
         {
             var year = DateTime.Now.Year;
             var month = DateTime.Now.Month;
-            var expenses = await Where(e => e.OwnerId == userId 
+            var expenses = Where(e => e.OwnerId == userId
                 && e.Date.Year == year && e.Date.Month == month && e.Date.Day == day);
             var groupSum = expenses.GroupBy(e => e.PurseId)
                 .Select(g => new ExpenseForSumDto()
@@ -88,11 +114,9 @@ namespace ExpenseTracker.API.Repositories.Implementations
             return groupSum;
         }
 
-        public async Task<IEnumerable<PercentsTopicExpense>> GetPercentsExpensesPerTopicAsync(int userId)
+        public async Task<IEnumerable<PercentsTopicExpenseDto>> GetPercentsExpensesPerTopicAsync(int userId)
         {
-            var allExpenses = _context.Set<Expense>()
-                .Where(e => e.OwnerId == userId)
-                .AsEnumerable()
+            var allExpenses = Where(e => e.OwnerId == userId)
                 .GroupBy(e => e.PurseId)
                 .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.TopicId)
                 .Select(e => new SumExpensesPerTopicDto { Topic = e.FirstOrDefault().Topic.Name, Sum = e.Sum(ex => ex.Money) }).ToList());
@@ -125,10 +149,11 @@ namespace ExpenseTracker.API.Repositories.Implementations
                         purse.Value.Insert(i, new SumExpensesPerTopicDto() { Topic = names[i], Sum = 0 });
                     }
                 }
+
                 purse.Value.Sort((first, second) => first.Topic.CompareTo(second.Topic));
             }
 
-            var percents = allExpenses.Select(e => new PercentsTopicExpense() { CurrencyCode = e.Key, Percents = e.Value });
+            var percents = allExpenses.Select(e => new PercentsTopicExpenseDto() { CurrencyCode = e.Key, Percents = e.Value });
 
             return percents;
         }

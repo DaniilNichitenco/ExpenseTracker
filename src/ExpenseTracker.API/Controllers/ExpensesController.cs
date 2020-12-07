@@ -34,6 +34,15 @@ namespace ExpenseTracker.API.Controllers
             _authorizationService = authorizationService;
         }
 
+        [HttpGet("month")]
+        public IActionResult GetExpensesSumForCurrentMonth()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var expenses = _repository.GetExpensesSumForCurrentMonth(int.Parse(userId)).ToList();
+
+            return Ok(expenses);
+        }
+
         [HttpGet("percentsExpensesPerTopic")]
         public async Task<IActionResult> GetPercentsExpensesPerTopic()
         {
@@ -92,7 +101,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = HttpContext.GetUserIdFromToken();
 
-            var expenses = await _repository.Where(e => e.OwnerId.ToString() == userId);
+            var expenses = _repository.Where(e => e.OwnerId.ToString() == userId);
 
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
@@ -118,7 +127,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = HttpContext.GetUserIdFromToken();
 
-            var expenses = await _repository.Where(e => e.OwnerId.ToString() == userId && e.TopicId == topicId);
+            var expenses = _repository.Where(e => e.OwnerId.ToString() == userId && e.TopicId == topicId);
 
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));
@@ -222,7 +231,7 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetSumForCurrentMonth()
         {
             var userId = HttpContext.GetUserIdFromToken();
-            var month = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
 
             var sums = await _repository.GetSumForMonth(int.Parse(userId), month);
 

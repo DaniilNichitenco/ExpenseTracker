@@ -8,5 +8,7 @@ namespace ExpenseTracker.API.Repositories.Interfaces
 {
     public interface IPurseRepository : IRepository<Purse>
     {
+        List<string> GetAvailablePurses(int userId);
+        int GetAllCurrenciesAmount();
     }
 }

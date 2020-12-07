@@ -13,7 +13,8 @@ namespace ExpenseTracker.API.Repositories.Interfaces
         Task<IEnumerable<ExpenseForSumDto>> GetSumForYear(int userId, int year);
         Task<IEnumerable<ExpenseForSumDto>> GetSumForMonth(int userId, int month);
         Task<IEnumerable<ExpenseForSumDto>> GetSumForDay(int userId, int day);
-        Task<IEnumerable<PercentsTopicExpense>> GetPercentsExpensesPerTopicAsync(int userId);
+        Task<IEnumerable<PercentsTopicExpenseDto>> GetPercentsExpensesPerTopicAsync(int userId);
         Task<int> GetCountUserExpensesAsync(int userId);
+        IEnumerable<ExpensesPerDaysDto> GetExpensesSumForCurrentMonth(int userId);
     }
 }

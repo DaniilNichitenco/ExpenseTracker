@@ -83,7 +83,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var user = await HttpContext.GetUserAsync(_userManager);
 
-            var usersInfo = await _repository.Where(p => p.OwnerId == user.Id);
+            var usersInfo = _repository.Where(p => p.OwnerId == user.Id);
             var userInfo = usersInfo.FirstOrDefault();
 
             if (userInfo == null)

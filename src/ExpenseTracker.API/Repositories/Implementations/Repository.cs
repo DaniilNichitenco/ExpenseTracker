@@ -74,10 +74,9 @@ namespace ExpenseTracker.API.Repositories.Implementations
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate)
+        public IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
         {
-            var entities = await _context.Set<TEntity>().ToListAsync();
-            return entities.Where(predicate.Compile());
+            return _context.Set<TEntity>().Where(predicate.Compile());
         }
 
         private IQueryable<TEntity> IncludeProperties(params Expression<Func<TEntity, object>>[] includeProperties)

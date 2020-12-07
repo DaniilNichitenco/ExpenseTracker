@@ -13,7 +13,7 @@ namespace ExpenseTracker.API.Repositories.Interfaces
     {
         Task<TEntity> Get(int id);
         Task<IEnumerable<TEntity>> GetAll();
-        Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate);
+        IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
         Task Add(TEntity entity);
         Task AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
