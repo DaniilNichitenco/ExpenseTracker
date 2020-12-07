@@ -22,6 +22,19 @@ namespace ExpenseTracker.Domain.Purses
             }
         }
 
+        public static List<string> GetAllCurrencies()
+        {
+            var currencies = new List<string>();
+            currencies.AddRange(new List<string>() 
+            { 
+                CreatePurseEUR(0).CurrencyCode,
+                CreatePurseMDL(0).CurrencyCode,
+                CreatePurseUSD(0).CurrencyCode
+            });
+
+            return currencies;
+        }
+
         private static PurseMDL CreatePurseMDL(double bill)
         {
             return new PurseMDL() { Bill = bill };

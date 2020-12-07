@@ -86,8 +86,21 @@ namespace ExpenseTracker.API.Controllers
             return Ok(pursesDto);
         }
 
+        [HttpGet("list")]
+        public IActionResult GetPursesForList()
+        {
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+            var purses = _repository.Where(p => p.OwnerId == userId).ToList();
+
+            List<PurseForListDto> purseForListDtos = new List<PurseForListDto>();
+
+            purses.ForEach(p => purseForListDtos.Add(_mapper.Map<PurseForListDto>(p)));
+
+            return Ok(purseForListDtos);
+        }
+
         [HttpGet("currentUser")]
-        public async Task<IActionResult> GetCurrentUserPurses()
+        public IActionResult GetCurrentUserPurses()
         {
             var userId = int.Parse(HttpContext.GetUserIdFromToken());
             var purses = _repository.Where(p => p.OwnerId == userId);
@@ -114,10 +127,10 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetPurse), new { id = purseDto.Id }, purseDto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePurse([FromBody]PurseForUpdateDto purseForUpdateDto, int id)
+        [HttpPut]
+        public async Task<IActionResult> UpdatePurse([FromBody]PurseForUpdateDto purseForUpdateDto)
         {
-            var purse = await _repository.Get(id);
+            var purse = await _repository.Get(purseForUpdateDto.Id);
             if(purse == null)
             {
                 return NotFound();
@@ -155,6 +168,23 @@ namespace ExpenseTracker.API.Controllers
             await _repository.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("available")]
+        public IActionResult GetAvailablePurses()
+        {
+            var userId = HttpContext.GetUserIdFromToken();
+            var currencies = _repository.GetAvailablePurses(int.Parse(userId));
+
+            return Ok(currencies);
+        }
+
+        [HttpGet("AmountCurrencies")]
+        public IActionResult GetAllCurrenciesAmount()
+        {
+            var amount = _repository.GetAllCurrenciesAmount();
+
+            return Ok(amount);
         }
     }
 }

@@ -14,5 +14,31 @@ namespace ExpenseTracker.API.Repositories.Implementations
         {
 
         }
+
+        public List<string> GetAvailablePurses(int userId)
+        {
+            var purses = Where(p => p.OwnerId == userId);
+            if(purses == null || purses.Count() == 0)
+            {
+                return new List<string>();
+            }
+
+            var currencies = PurseFactory.GetAllCurrencies();
+            foreach(var purse in purses)
+            {
+                if(currencies.Contains(purse.CurrencyCode.ToLower()))
+                {
+                    var index = currencies.FindIndex(c => c == purse.CurrencyCode.ToLower());
+                    currencies.RemoveAt(index);
+                }
+            }
+            return currencies;
+        }
+
+        public int GetAllCurrenciesAmount()
+        {
+            var amount = PurseFactory.GetAllCurrencies().Count;
+            return amount;
+        }
     }
 }
