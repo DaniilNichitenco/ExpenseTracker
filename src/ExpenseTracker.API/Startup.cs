@@ -94,10 +94,7 @@ namespace ExpenseTracker.API
             services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoAdministratorsAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoIsOwnerAuthorizationHandler>();
 
-
-            services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-            services.AddScoped<IOccasionRepository, OccasionRepository>();
             services.AddScoped<IPurseRepository, PurseRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
