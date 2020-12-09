@@ -18,10 +18,10 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public List<string> GetAvailablePurses(int userId)
         {
             var purses = Where(p => p.OwnerId == userId);
-            if(purses == null || purses.Count() == 0)
-            {
-                return new List<string>();
-            }
+            //if(purses == null || purses.Count() == 0)
+            //{
+            //    return new List<string>();
+            //}
 
             var currencies = PurseFactory.GetAllCurrencies();
             foreach(var purse in purses)
