@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201210082601_AddRelationBetweenUserAndItsData.cs" />
+    <Compile Remove="Migrations\20201210082601_AddRelationBetweenUserAndItsData.Designer.cs" />
+    <Compile Remove="Migrations\20201210083120_AddRelationBetweenUserAndItsData.cs" />
+    <Compile Remove="Migrations\20201210083120_AddRelationBetweenUserAndItsData.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />

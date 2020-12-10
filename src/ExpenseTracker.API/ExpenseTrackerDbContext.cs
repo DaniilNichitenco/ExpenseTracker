@@ -23,11 +23,12 @@ namespace ExpenseTracker.API
         {
             base.OnModelCreating(modelBuilder);
 
+            var assemblyUser = typeof(UserConfig).Assembly;
             var assemblyProfile = typeof(UserInfoConfig).Assembly;
             var assemblyPurse = typeof(PurseConfig).Assembly;
             var assemblyTopic = typeof(TopicConfig).Assembly;
 
-            modelBuilder.ApplyConfigurationsFromAssembly(assemblyProfile);
+            modelBuilder.ApplyConfigurationsFromAssembly(assemblyUser);
 
             modelBuilder.Entity<PurseEUR>();
             modelBuilder.Entity<PurseMDL>();
