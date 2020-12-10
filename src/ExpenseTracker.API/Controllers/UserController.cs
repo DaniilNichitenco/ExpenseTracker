@@ -11,6 +11,7 @@ using ExpenseTracker.API.Dtos.UserDto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseTracker.Domain.Auth;
+using ExpenseTracker.API.Infrastructure.Models;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -33,11 +34,19 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // GET: api/Users
-        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
+
             var usersInfo = await _repository.GetAll();
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, usersInfo, "Permission");
+
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
+
             var usersDto = new List<UserDto>();
             usersInfo.ToList().ForEach(async ui => 
             {
@@ -49,6 +58,27 @@ namespace ExpenseTracker.API.Controllers
             });
 
             return Ok(usersDto);
+        }
+
+        [HttpPost("PaginatedSearch")]
+        public async Task<IActionResult> GetPagedUsers([FromBody] PagedRequest request)
+        {
+            var pagedUsersDto = await _repository.GetPagedData<UserDto>(request);
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, pagedUsersDto.Items.ToList(), "Permission");
+            if (!AR.Succeeded)
+            {
+                return Forbid();
+            }
+
+            foreach(var u in pagedUsersDto.Items)
+            {
+                var user = await _userManager.FindByIdAsync(u.Id.ToString());
+                u.Email = user.Email;
+                u.UserName = user.UserName;
+            }
+
+            return Ok(pagedUsersDto);
         }
 
         // GET: api/Users/5
@@ -140,32 +170,6 @@ namespace ExpenseTracker.API.Controllers
 
             return NoContent();
         }
-
-        // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[Authorize(Roles = "admin")]
-        //[HttpPost("create/{userId}")]
-        //public async Task<ActionResult<UserInfo>> CreatePerson(int userId, [FromBody]UserForUpdateDto personForUpdateDto)
-        //{
-        //    var user = await GetUserAsync(userId);
-        //    if(user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var person = _mapper.Map<UserInfo>(personForUpdateDto);
-        //    person.OwnerId = userId;
-
-        //    await _repository.Add(person);
-        //    await _repository.SaveChangesAsync();
-
-        //    var personDto = _mapper.Map<UserDto>(person);
-        //    personDto.Email = user.Email;
-        //    personDto.UserName = user.UserName;
-
-        //    return CreatedAtAction(nameof(GetPerson), new { id = personDto.Id }, personDto);
-        //}
 
         // DELETE: api/Users/5
         //[Authorize(Roles = "admin")]
