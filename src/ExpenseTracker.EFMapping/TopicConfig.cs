@@ -17,7 +17,7 @@ namespace ExpenseTracker.EFMapping
             builder.HasMany(t => t.Expenses)
                 .WithOne(e => e.Topic)
                 .HasForeignKey(e => e.TopicId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

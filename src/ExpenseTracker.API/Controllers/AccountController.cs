@@ -8,6 +8,7 @@ using AutoMapper;
 using ExpenseTracker.API.Dtos.Account;
 using ExpenseTracker.API.Dtos.UserDto;
 using ExpenseTracker.API.Infrastructure.Configurations;
+using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.Domain;
 using ExpenseTracker.Domain.Auth;
@@ -115,16 +116,11 @@ namespace ExpenseTracker.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAccount()
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await HttpContext.GetUserAsync(_userManager);
             if(user == null)
             {
                 return NotFound();
             }
-
-            var people = _repository.Where(p => p.OwnerId.ToString() == userId);
-
-            _repository.RemoveRange(people);
             await _userManager.DeleteAsync(user);
 
             return NoContent();
@@ -152,6 +148,7 @@ namespace ExpenseTracker.API.Controllers
         {
             List<Claim> _claims = new List<Claim>() { new Claim("UserId", userId.ToString()) };
             roles.ForEach(r => _claims.Add(new Claim("Role", r)));
+
             var signingCredentials = new SigningCredentials(_authOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256);
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _authOptions.Issuer,
