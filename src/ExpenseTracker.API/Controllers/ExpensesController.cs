@@ -97,7 +97,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserExpenses()
+        public IActionResult GetUserExpenses()
         {
             var userId = HttpContext.GetUserIdFromToken();
 
@@ -123,7 +123,7 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpGet("topic/{topicId}")]
-        public async Task<IActionResult> GetUserExpensesByTopicId(int topicId)
+        public IActionResult GetUserExpensesByTopicId(int topicId)
         {
             var userId = HttpContext.GetUserIdFromToken();
 

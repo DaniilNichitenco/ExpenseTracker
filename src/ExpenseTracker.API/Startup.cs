@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ExpenseTracker.Domain.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,20 +9,18 @@ using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using System.Reflection;
 using ExpenseTracker.API.Infrastructure.Extensions;
-using ExpenseTracker.API.Infrastructure.Middlewares;
 using ExpenseTracker.API.Repositories.Interfaces;
 using ExpenseTracker.API.Repositories.Implementations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Authorization;
 using ExpenseTracker.API.Authorization.BaseEntityAuthHandler;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using ExpenseTracker.API.Authorization.IEnumerableBaseEntityAuthHandler;
 using ExpenseTracker.API.Authorization.ExpenseDtoAuthHandler;
 using ExpenseTracker.API.Authorization.IEnumerableExpenseDtoAuthHandler;
+using ExpenseTracker.API.Authorization.IEnumerableUserDtoAuthHandler;
 
 namespace ExpenseTracker.API
 {
@@ -58,14 +53,12 @@ namespace ExpenseTracker.API
                 options.User.RequireUniqueEmail = true;
             })
                 .AddRoles<Role>()
-                //.AddUserStore<UserStore>()
                 .AddEntityFrameworkStores<ExpenseTrackerDbContext>();
 
             var authOptions = services.ConfigureAuthOptions(Configuration);
             services.AddJwtAuthentication(authOptions);
 
             ConfigureSwagger(services);
-            //services.AddControllers();
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -83,21 +76,9 @@ namespace ExpenseTracker.API
             }
             );
 
+            services.AddAuthorizationHandlers();
 
-
-            services.AddScoped<IAuthorizationHandler, BaseEntityIsOwnerAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, BaseEntityAdministratorsAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, IEnumerableBaseEntityAdministratorsAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, IEnumerableBaseEntityIsOwnerAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, ExpenseDtoAdministratorsAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, ExpenseDtoIsOwnerAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoAdministratorsAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, IEnumerableExpenseDtoIsOwnerAuthorizationHandler>();
-
-            services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-            services.AddScoped<IPurseRepository, PurseRepository>();
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddRepositories();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
