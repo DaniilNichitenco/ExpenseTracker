@@ -31,10 +31,11 @@ namespace ExpenseTracker.API.Controllers
         private readonly IMapper _mapper;
         private readonly RoleManager<Role> _roleManager;
         private readonly IUserInfoRepository _repository;
+        private readonly IAuthorizationService _authorizationService;
 
         public AccountController(IOptions<AuthOptions> options, SignInManager<User> signInManager,
             UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager,
-            IUserInfoRepository repository)
+            IUserInfoRepository repository, IAuthorizationService authorizationService)
         {
             _authOptions = options.Value;
             _signInManager = signInManager;
@@ -42,11 +43,18 @@ namespace ExpenseTracker.API.Controllers
             _mapper = mapper;
             _roleManager = roleManager;
             _repository = repository;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateAccount(UserForUpdateAccount userForUpdateAccount)
         {
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
+
             var userById = await _userManager.FindByIdAsync(userForUpdateAccount.Id.ToString());
             if (userById == null)
             {
@@ -163,6 +171,12 @@ namespace ExpenseTracker.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccoutById(int id)
         {
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Unauthorized();
+            }
+
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
