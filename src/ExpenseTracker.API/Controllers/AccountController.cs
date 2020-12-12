@@ -44,6 +44,40 @@ namespace ExpenseTracker.API.Controllers
             _repository = repository;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateAccount(UserForUpdateAccount userForUpdateAccount)
+        {
+            var userById = await _userManager.FindByIdAsync(userForUpdateAccount.Id.ToString());
+            if (userById == null)
+            {
+                return NotFound(new { Message = $"Could not find user with Id '{userForUpdateAccount.Id}'" } );
+            }
+
+            var userByEmail = await _userManager.FindByEmailAsync(userForUpdateAccount.Email);
+            if (userByEmail != null && userByEmail.Email != userById.Email)
+            {
+                return BadRequest(new { Message = $"Email '{userForUpdateAccount.Email}' is already taken" } );
+            }
+
+            var userByUserName = await _userManager.FindByNameAsync(userForUpdateAccount.UserName);
+            if(userByUserName != null && userByUserName.UserName != userById.UserName)
+            {
+                return BadRequest(new { Message = $"UserName '{userForUpdateAccount.UserName}' is already taken" });
+            }
+
+            await _userManager.SetEmailAsync(userById, userForUpdateAccount.Email);
+            await _userManager.SetUserNameAsync(userById, userForUpdateAccount.UserName);
+
+            var userInfo = userById.UserInfo;
+
+            userInfo.FirstName = userForUpdateAccount.FirstName;
+            userInfo.LastName = userForUpdateAccount.LastName;
+            _repository.Update(userInfo);
+            await _repository.SaveChangesAsync();
+
+            return Ok(new { Message = $"Successed" });
+        }
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
@@ -126,7 +160,6 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccoutById(int id)
         {
@@ -136,9 +169,6 @@ namespace ExpenseTracker.API.Controllers
                 return NotFound();
             }
 
-            var people = _repository.Where(p => p.OwnerId == id);
-
-            _repository.RemoveRange(people);
             await _userManager.DeleteAsync(user);
 
             return NoContent();

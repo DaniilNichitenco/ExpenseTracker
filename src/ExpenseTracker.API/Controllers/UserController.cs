@@ -85,13 +85,14 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var userInfo = await _repository.Get(id);
+            var user = await _userManager.FindByIdAsync(id.ToString());
 
-            if (userInfo == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
+            var userInfo = _repository.Where(u => u.OwnerId == user.Id).FirstOrDefault();
             var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, userInfo, "Permission");
 
             if (!AR.Succeeded)
@@ -100,7 +101,6 @@ namespace ExpenseTracker.API.Controllers
             }
 
             UserDto userDto = _mapper.Map<UserDto>(userInfo);
-            var user = await HttpContext.GetUserAsync(_userManager);
             userDto.Email = user.Email;
             userDto.UserName = user.UserName;
 
@@ -129,8 +129,6 @@ namespace ExpenseTracker.API.Controllers
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserInfo(int id, [FromBody]UserForUpdateDto userForUpdateDto)
         {
