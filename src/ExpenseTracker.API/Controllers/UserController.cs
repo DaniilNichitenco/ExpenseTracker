@@ -38,14 +38,13 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetUsers()
         {
 
-            var usersInfo = await _repository.GetAll();
-
-            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, usersInfo, "Permission");
-
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, "Permission");
             if (!AR.Succeeded)
             {
                 return Unauthorized();
             }
+
+            var usersInfo = await _repository.GetAll();
 
             var usersDto = new List<UserDto>();
             usersInfo.ToList().ForEach(async ui => 
@@ -168,34 +167,5 @@ namespace ExpenseTracker.API.Controllers
 
             return NoContent();
         }
-
-        // DELETE: api/Users/5
-        //[Authorize(Roles = "admin")]
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var person = await _repository.Get(id);
-
-        //    if (person == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _repository.Remove(person);
-        //    await _repository.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private async Task<User> GetUserAsync()
-        //{
-        //    var id = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId").Value;
-        //    return await _userManager.FindByIdAsync(id);
-        //}
-
-        //private async Task<User> GetUserAsync(int id)
-        //{
-        //    return await _userManager.FindByIdAsync(id.ToString());
-        //}
     }
 }

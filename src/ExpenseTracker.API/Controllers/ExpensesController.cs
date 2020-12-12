@@ -64,13 +64,13 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAllExpenses()
         {
-            var expenses = await _repository.GetAll();
-
-            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, expenses, "Permission");
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, "Permission");
             if (!AR.Succeeded)
             {
-                return Forbid();
+                return Unauthorized();
             }
+
+            var expenses = await _repository.GetAll();
 
             List<ExpenseDto> expensesDto = new List<ExpenseDto>();
             expenses.ToList().ForEach(expense => expensesDto.Add(_mapper.Map<ExpenseDto>(expense)));

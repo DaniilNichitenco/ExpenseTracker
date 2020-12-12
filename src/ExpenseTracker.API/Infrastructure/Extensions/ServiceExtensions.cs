@@ -11,6 +11,7 @@ using ExpenseTracker.API.Authorization.BaseEntityAuthHandler;
 using ExpenseTracker.API.Authorization.IEnumerableBaseEntityAuthHandler;
 using ExpenseTracker.API.Authorization.IEnumerableExpenseDtoAuthHandler;
 using ExpenseTracker.API.Authorization.ExpenseDtoAuthHandler;
+using ExpenseTracker.API.Authorization;
 
 namespace ExpenseTracker.API.Infrastructure.Extensions
 {
@@ -28,6 +29,7 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
 
         public static IServiceCollection AddAuthorizationHandlers(this IServiceCollection services)
         {
+            services.AddSingleton<IAuthorizationHandler, IsAdministratorAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, IEnumerableUserDtoAdministratorsAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, BaseEntityAdministratorsAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, IEnumerableBaseEntityAdministratorsAuthorizationHandler>();

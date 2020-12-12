@@ -57,13 +57,13 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPurses()
         {
-            var purses = await _repository.GetAll();
-
-            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, purses, "Permission");
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, "Permission");
             if (!AR.Succeeded)
             {
-                return Forbid();
+                return Unauthorized();
             }
+
+            var purses = await _repository.GetAll();
 
             List<PurseDto> pursesDto = new List<PurseDto>();
             purses.ToList().ForEach(purse => pursesDto.Add(_mapper.Map<PurseDto>(purse)));
