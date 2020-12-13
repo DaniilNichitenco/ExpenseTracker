@@ -7,6 +7,7 @@ namespace ExpenseTracker.Domain
     public class Topic : BaseEntity
     {
         public string Name { get; set; }
+        public new int? OwnerId { get; set; }
         public virtual ICollection<Expense> Expenses { get; set; }
     }
 }

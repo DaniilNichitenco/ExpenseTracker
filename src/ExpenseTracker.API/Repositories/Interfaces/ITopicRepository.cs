@@ -10,5 +10,6 @@ namespace ExpenseTracker.API.Repositories.Interfaces
     {
         IEnumerable<Topic> GetTopicsWithFixedExpenses(int count, int userId);
         Task<IEnumerable<string>> GetUserTopicNames(int userId);
+        void DeleteTopic(int id);
     }
 }

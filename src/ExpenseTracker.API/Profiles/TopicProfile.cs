@@ -18,6 +18,8 @@ namespace ExpenseTracker.API.Profiles
             CreateMap<Topic, TopicWithExpensesDto>()
                 .ForMember(t => t.Expenses, m =>
                     m.MapFrom(e => e.Expenses));
+            CreateMap<TopicDto, Topic>();
+            CreateMap<TopicForCreateDto, Topic>();
         }
     }
 }
