@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ExpenseTracker.API.Infrastructure.Extensions;
 using ExpenseTracker.Domain;
+using ExpenseTracker.API.Infrastructure.Constants;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -102,13 +103,27 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        public IActionResult GetMaxUserTopics()
+        {
+            return Ok(Constants.MaxUserTopics);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateTopic([FromBody] TopicForCreateDto topicForCreateDto)
         {
-            var userId = HttpContext.GetUserIdFromToken();
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+
+            var count = _repository.Count(t => t.OwnerId == userId);
+
+            if(count >= Constants.MaxUserTopics)
+            {
+                return BadRequest(new { Message = "User already has too much topics" });
+            }
+
             var topic = _mapper.Map<Topic>(topicForCreateDto);
 
-            topic.OwnerId = int.Parse(userId);
+            topic.OwnerId = userId;
 
             await _repository.Add(topic);
             await _repository.SaveChangesAsync();
