@@ -8,7 +8,7 @@ namespace ExpenseTracker.API.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "OwnerId",
-                table: "Purses",
+                table: "Wallets",
                 nullable: false,
                 defaultValue: 0);
 
@@ -35,7 +35,7 @@ namespace ExpenseTracker.API.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "OwnerId",
-                table: "Purses");
+                table: "Wallets");
 
             migrationBuilder.DropColumn(
                 name: "OwnerId",

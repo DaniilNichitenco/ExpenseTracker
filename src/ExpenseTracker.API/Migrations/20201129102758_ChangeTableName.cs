@@ -7,7 +7,7 @@ namespace ExpenseTracker.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Expense_Purses_PurseId",
+                name: "FK_Expense_Wallets_WalletId",
                 table: "Expense");
 
             migrationBuilder.DropForeignKey(
@@ -36,9 +36,9 @@ namespace ExpenseTracker.API.Migrations
                 newName: "IX_Expenses_TopicId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Expense_PurseId",
+                name: "IX_Expense_WalletId",
                 table: "Expenses",
-                newName: "IX_Expenses_PurseId");
+                newName: "IX_Expenses_WalletId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_UserInfos",
@@ -51,10 +51,10 @@ namespace ExpenseTracker.API.Migrations
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Expenses_Purses_PurseId",
+                name: "FK_Expenses_Wallets_WalletId",
                 table: "Expenses",
-                column: "PurseId",
-                principalTable: "Purses",
+                column: "WalletId",
+                principalTable: "Wallets",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -70,7 +70,7 @@ namespace ExpenseTracker.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Expenses_Purses_PurseId",
+                name: "FK_Expenses_Wallets_WalletId",
                 table: "Expenses");
 
             migrationBuilder.DropForeignKey(
@@ -99,9 +99,9 @@ namespace ExpenseTracker.API.Migrations
                 newName: "IX_Expense_TopicId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Expenses_PurseId",
+                name: "IX_Expenses_WalletId",
                 table: "Expense",
-                newName: "IX_Expense_PurseId");
+                newName: "IX_Expense_WalletId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_People",
@@ -114,10 +114,10 @@ namespace ExpenseTracker.API.Migrations
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Expense_Purses_PurseId",
+                name: "FK_Expense_Wallets_WalletId",
                 table: "Expense",
-                column: "PurseId",
-                principalTable: "Purses",
+                column: "WalletId",
+                principalTable: "Wallets",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 

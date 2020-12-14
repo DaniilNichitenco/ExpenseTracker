@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Purses
+namespace ExpenseTracker.API.Dtos.Wallets
 {
-    public class PurseForUpdateDto
+    public class WalletForUpdateDto
     {
         [Required]
         public int Id { get; set; }

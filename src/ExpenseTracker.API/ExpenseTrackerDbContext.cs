@@ -1,6 +1,6 @@
 ﻿using ExpenseTracker.Domain;
 using ExpenseTracker.Domain.Auth;
-using ExpenseTracker.Domain.Purses;
+using ExpenseTracker.Domain.Wallets;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ExpenseTracker.EFMapping.Schemas;
@@ -16,7 +16,7 @@ namespace ExpenseTracker.API
         }
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<Purse> Purses { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
         public DbSet<Topic> Topics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,14 +25,14 @@ namespace ExpenseTracker.API
 
             var assemblyUser = typeof(UserConfig).Assembly;
             var assemblyProfile = typeof(UserInfoConfig).Assembly;
-            var assemblyPurse = typeof(PurseConfig).Assembly;
+            var assemblyWallet = typeof(WalletConfig).Assembly;
             var assemblyTopic = typeof(TopicConfig).Assembly;
 
             modelBuilder.ApplyConfigurationsFromAssembly(assemblyUser);
 
-            modelBuilder.Entity<PurseEUR>();
-            modelBuilder.Entity<PurseMDL>();
-            modelBuilder.Entity<PurseUSD>();
+            modelBuilder.Entity<WalletEUR>();
+            modelBuilder.Entity<WalletMDL>();
+            modelBuilder.Entity<WalletUSD>();
 
             ApplyIdentityMapConfiguration(modelBuilder);
         }

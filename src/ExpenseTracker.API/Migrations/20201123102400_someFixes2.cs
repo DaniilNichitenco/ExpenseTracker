@@ -7,35 +7,35 @@ namespace ExpenseTracker.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Purses_People_PersonId",
-                table: "Purses");
+                name: "FK_Wallets_People_PersonId",
+                table: "Wallets");
 
             migrationBuilder.DropIndex(
-                name: "IX_Purses_PersonId",
-                table: "Purses");
+                name: "IX_Wallets_PersonId",
+                table: "Wallets");
 
             migrationBuilder.DropColumn(
                 name: "PersonId",
-                table: "Purses");
+                table: "Wallets");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
                 name: "PersonId",
-                table: "Purses",
+                table: "Wallets",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purses_PersonId",
-                table: "Purses",
+                name: "IX_Wallets_PersonId",
+                table: "Wallets",
                 column: "PersonId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Purses_People_PersonId",
-                table: "Purses",
+                name: "FK_Wallets_People_PersonId",
+                table: "Wallets",
                 column: "PersonId",
                 principalTable: "People",
                 principalColumn: "Id",

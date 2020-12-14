@@ -23,7 +23,7 @@ namespace ExpenseTracker.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    PurseId = table.Column<int>(nullable: false),
+                    WalletId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 40, nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Money = table.Column<double>(nullable: false)
@@ -32,17 +32,17 @@ namespace ExpenseTracker.API.Migrations
                 {
                     table.PrimaryKey("PK_Expense", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Expense_Purses_PurseId",
-                        column: x => x.PurseId,
-                        principalTable: "Purses",
+                        name: "FK_Expense_Wallets_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Expense_PurseId",
+                name: "IX_Expense_WalletId",
                 table: "Expense",
-                column: "PurseId");
+                column: "WalletId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

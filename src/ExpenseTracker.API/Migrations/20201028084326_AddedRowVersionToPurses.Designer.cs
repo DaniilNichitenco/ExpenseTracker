@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTracker.API.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    [Migration("20201028084326_AddedRowVersionToPurses")]
-    partial class AddedRowVersionToPurses
+    [Migration("20201028084326_AddedRowVersionToWallets")]
+    partial class AddedRowVersionToWallets
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -299,7 +299,7 @@ namespace ExpenseTracker.API.Migrations
                     b.ToTable("People");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -332,30 +332,30 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Purses");
+                    b.ToTable("Wallets");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Purse");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Wallet");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseEUR", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletEUR", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
 
-                    b.HasDiscriminator().HasValue("PurseEUR");
+                    b.HasDiscriminator().HasValue("WalletEUR");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseMDL", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletMDL", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
 
-                    b.HasDiscriminator().HasValue("PurseMDL");
+                    b.HasDiscriminator().HasValue("WalletMDL");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseUSD", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletUSD", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
 
-                    b.HasDiscriminator().HasValue("PurseUSD");
+                    b.HasDiscriminator().HasValue("WalletUSD");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Auth.RoleClaim", b =>
@@ -427,10 +427,10 @@ namespace ExpenseTracker.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
                 {
                     b.HasOne("ExpenseTracker.Domain.Person", "Person")
-                        .WithMany("Purses")
+                        .WithMany("Wallets")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

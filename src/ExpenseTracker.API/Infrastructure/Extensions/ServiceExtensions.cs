@@ -20,7 +20,7 @@ namespace ExpenseTracker.API.Infrastructure.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-            services.AddScoped<IPurseRepository, PurseRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
 

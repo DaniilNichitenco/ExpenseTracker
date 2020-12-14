@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Purses
+namespace ExpenseTracker.API.Dtos.Wallets
 {
-    public class PurseForCreateDto
+    public class WalletForCreateDto
     {
         [Required]
         [Range(0.0d, Double.MaxValue)]

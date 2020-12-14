@@ -12,7 +12,7 @@ namespace ExpenseTracker.API.Dtos.Expenses
         public int Id { get; set; }
 
         [Required]
-        public int PurseId { get; set; }
+        public int WalletId { get; set; }
 
         [Required]
         [MaxLength(40)]

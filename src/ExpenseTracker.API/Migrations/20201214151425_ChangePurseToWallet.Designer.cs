@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTracker.API.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    [Migration("20201129085404_CreatedTopics")]
-    partial class CreatedTopics
+    [Migration("20201214151425_ChangePurseToWallet")]
+    partial class ChangePurseToWallet
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,27 +237,29 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.Property<int>("WalletId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(40)")
-                        .HasMaxLength(40);
-
-                    b.Property<int>("TopicId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("WalletId");
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Expense");
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Note", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Topic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,51 +269,49 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(40)")
-                        .HasMaxLength(40);
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notes");
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Topics");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Occasion", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.UserInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Context")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("OccasionDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(40)")
-                        .HasMaxLength(40);
-
                     b.HasKey("Id");
 
-                    b.ToTable("Occasions");
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
+
+                    b.ToTable("UserInfos");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
@@ -345,59 +345,11 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Wallets");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Wallet");
-                });
-
-            modelBuilder.Entity("ExpenseTracker.Domain.Topic", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Topics");
-                });
-
-            modelBuilder.Entity("ExpenseTracker.Domain.UserInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletEUR", b =>
@@ -474,15 +426,46 @@ namespace ExpenseTracker.API.Migrations
 
             modelBuilder.Entity("ExpenseTracker.Domain.Expense", b =>
                 {
-                    b.HasOne("ExpenseTracker.Domain.Wallets.Wallet", "Wallet")
+                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
                         .WithMany("Expenses")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ExpenseTracker.Domain.Topic", "Topic")
                         .WithMany("Expenses")
                         .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ExpenseTracker.Domain.Wallets.Wallet", "Wallet")
+                        .WithMany("Expenses")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Topic", b =>
+                {
+                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
+                        .WithMany("Topics")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.UserInfo", b =>
+                {
+                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
+                        .WithOne("UserInfo")
+                        .HasForeignKey("ExpenseTracker.Domain.UserInfo", "OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
+                {
+                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
+                        .WithMany("Wallets")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
