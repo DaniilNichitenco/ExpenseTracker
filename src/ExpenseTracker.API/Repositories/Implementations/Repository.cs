@@ -23,6 +23,16 @@ namespace ExpenseTracker.API.Repositories.Implementations
             _mapper = mapper;
         }
 
+        public int Count()
+        {
+            return _context.Set<TEntity>().Count();
+        }
+
+        public int Count(Expression<Func<TEntity, bool>> predicate)
+        {
+            return Where(predicate).Count();
+        }
+
         public async Task Add(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
