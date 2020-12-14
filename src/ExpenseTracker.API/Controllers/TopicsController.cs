@@ -35,6 +35,28 @@ namespace ExpenseTracker.API.Controllers
             _authorizationService = authorizationService;
         }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateTopic(TopicForUpdateDto topicForUpdateDto)
+        {
+            var topic = await _repository.Get(topicForUpdateDto.Id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+            var AR = await _authorizationService.AuthorizeAsync(HttpContext.User, topic, "Permission");
+            if (!AR.Succeeded)
+            {
+                return Forbid();
+            }
+
+            _mapper.Map(topicForUpdateDto, topic);
+            _repository.Update(topic);
+            await _repository.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpGet]
         public IActionResult GetTopicsForUser()
         {
@@ -103,7 +125,7 @@ namespace ExpenseTracker.API.Controllers
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet("maxUserTopics")]
         public IActionResult GetMaxUserTopics()
         {
             return Ok(Constants.MaxUserTopics);
@@ -114,7 +136,7 @@ namespace ExpenseTracker.API.Controllers
         {
             var userId = int.Parse(HttpContext.GetUserIdFromToken());
 
-            var count = _repository.Count(t => t.OwnerId == userId);
+            var count = _repository.Count(t => t.OwnerId == userId || t.OwnerId == null);
 
             if(count >= Constants.MaxUserTopics)
             {
@@ -133,6 +155,16 @@ namespace ExpenseTracker.API.Controllers
             return CreatedAtAction(nameof(GetTopic), new { id = topic.Id }, topicForCreateDto);
         }
 
+        [HttpGet("amountTopics")]
+        public IActionResult GetUserAmountTopics()
+        {
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+
+            var count = _repository.Count(t => t.OwnerId == userId || t.OwnerId == null);
+
+            return Ok(count);
+        }
+
         [HttpPost("forAll")]
         public async Task<IActionResult> CreateTopicForAllUsers([FromBody] TopicForCreateDto topicForCreateDto)
         {
@@ -148,6 +180,26 @@ namespace ExpenseTracker.API.Controllers
             var topicDto = _mapper.Map<TopicDto>(topic);
 
             return CreatedAtAction(nameof(GetTopic), new { id = topic.Id }, topicForCreateDto);
+        }
+
+        [HttpGet("userTopicsForList")]
+        public IActionResult GetUserTopicsForList()
+        {
+            var userId = int.Parse(HttpContext.GetUserIdFromToken());
+            var topics = _repository.Where(t => t.OwnerId == userId || t.OwnerId == null).ToList();
+
+            var topicsForList = new List<TopicForListDto>();
+
+            topics.ForEach(t =>
+            {
+                var topic = _mapper.Map<TopicForListDto>(t);
+                var count = _repository.GetCountTopicExpenses(userId, t.Id);
+                topic.CountExpenses = count;
+
+                topicsForList.Add(topic);
+            });
+
+            return Ok(topicsForList);
         }
     }
 }

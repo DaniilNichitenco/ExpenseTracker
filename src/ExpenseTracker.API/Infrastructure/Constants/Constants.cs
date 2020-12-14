@@ -7,6 +7,6 @@ namespace ExpenseTracker.API.Infrastructure.Constants
 {
     public static class Constants
     {
-        public static int MaxUserTopics { get; } = 8;
+        public static int MaxUserTopics { get; } = 12;
     }
 }

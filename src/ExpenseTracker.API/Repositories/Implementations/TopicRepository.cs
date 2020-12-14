@@ -64,5 +64,12 @@ namespace ExpenseTracker.API.Repositories.Implementations
 
             Remove(topic);
         }
+
+        public int GetCountTopicExpenses(int userId, int topicId)
+        {
+            var count = _context.Set<Expense>().Where(e => e.OwnerId == userId && e.TopicId == topicId).Count();
+
+            return count;
+        }
     }
 }
