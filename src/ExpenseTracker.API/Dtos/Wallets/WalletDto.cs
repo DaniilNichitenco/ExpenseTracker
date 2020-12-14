@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExpenseTracker.API.Dtos.Purses
+namespace ExpenseTracker.API.Dtos.Wallets
 {
-    public class PurseDto
+    public class WalletDto
     {
         public int Id { get; set; }
 

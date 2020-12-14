@@ -23,8 +23,8 @@ namespace ExpenseTracker.API.Repositories.Implementations
             var countDays = DateTime.DaysInMonth(date.Year, date.Month);
 
             var expenses = Where(e => e.OwnerId == userId && e.Date.Year == date.Year && e.Date.Month == date.Month)
-                .GroupBy(e => e.PurseId)
-                .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.Date.Day)
+                .GroupBy(e => e.WalletId)
+                .ToDictionary(g => g.FirstOrDefault().Wallet.CurrencyCode, g => g.GroupBy(grp => grp.Date.Day)
                 .Select(e => new ExpensePerDayDto() { Day = e.Key, Sum = e.Sum(exp => exp.Money)}).ToList());
 
             foreach(var d in expenses)
@@ -54,8 +54,8 @@ namespace ExpenseTracker.API.Repositories.Implementations
             var month = DateTime.Now.Month;
 
             var allExpenses = Where(e => e.OwnerId == userId && e.Date.Year == year)
-                .GroupBy(e => e.PurseId)
-                .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.Date.Month)
+                .GroupBy(e => e.WalletId)
+                .ToDictionary(g => g.FirstOrDefault().Wallet.CurrencyCode, g => g.GroupBy(grp => grp.Date.Month)
                 .Select(e => new ExpensePerMonthDto { Month = e.Key, Money = e.Sum(ex => ex.Money) }).ToList());
 
             var expenses = allExpenses.Select(e => new ExpensesPerMonthDto() { CurrencyCode = e.Key, Expenses = e.Value });
@@ -79,8 +79,8 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public async Task<IEnumerable<ExpenseForSumDto>> GetSumForYear(int userId, int year)
         {
             var expenses = Where(e => e.OwnerId == userId && e.Date.Year == year);
-            var groupSum = expenses.GroupBy(e => e.PurseId)
-                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+            var groupSum = expenses.GroupBy(e => e.WalletId)
+                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Wallet.CurrencyCode)
                     .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
 
             return groupSum;
@@ -90,8 +90,8 @@ namespace ExpenseTracker.API.Repositories.Implementations
         {
             var year = DateTime.Now.Year;
             var expenses = Where(e => e.OwnerId == userId && e.Date.Year == year && e.Date.Month == month);
-            var groupSum = expenses.GroupBy(e => e.PurseId)
-                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+            var groupSum = expenses.GroupBy(e => e.WalletId)
+                .Select(g => new ExpenseForSumDto() { CurrencyCode = g.Select(e => e.Wallet.CurrencyCode)
                     .FirstOrDefault(), Sum = g.Sum(e => e.Money) });
 
             return groupSum;
@@ -103,10 +103,10 @@ namespace ExpenseTracker.API.Repositories.Implementations
             var month = DateTime.Now.Month;
             var expenses = Where(e => e.OwnerId == userId
                 && e.Date.Year == year && e.Date.Month == month && e.Date.Day == day);
-            var groupSum = expenses.GroupBy(e => e.PurseId)
+            var groupSum = expenses.GroupBy(e => e.WalletId)
                 .Select(g => new ExpenseForSumDto()
                 {
-                    CurrencyCode = g.Select(e => e.Purse.CurrencyCode)
+                    CurrencyCode = g.Select(e => e.Wallet.CurrencyCode)
                     .FirstOrDefault(),
                     Sum = g.Sum(e => e.Money)
                 });
@@ -117,40 +117,40 @@ namespace ExpenseTracker.API.Repositories.Implementations
         public async Task<IEnumerable<PercentsTopicExpenseDto>> GetPercentsExpensesPerTopicAsync(int userId)
         {
             var allExpenses = Where(e => e.OwnerId == userId)
-                .GroupBy(e => e.PurseId)
-                .ToDictionary(g => g.FirstOrDefault().Purse.CurrencyCode, g => g.GroupBy(grp => grp.TopicId)
+                .GroupBy(e => e.WalletId)
+                .ToDictionary(g => g.FirstOrDefault().Wallet.CurrencyCode, g => g.GroupBy(grp => grp.TopicId)
                 .Select(e => new SumExpensesPerTopicDto { Topic = e.FirstOrDefault().Topic.Name, Sum = e.Sum(ex => ex.Money) }).ToList());
 
             var topics = _context.Set<Topic>().Where(t => t.OwnerId == userId);
             var names = await topics.Select(t => t.Name).ToListAsync();
 
-            foreach (var purse in allExpenses)
+            foreach (var Wallet in allExpenses)
             {
                 double sum = 0;
-                sum = purse.Value.Sum(e => e.Sum);
+                sum = Wallet.Value.Sum(e => e.Sum);
 
                 if (sum == 0)
                 {
                     sum = 1; //Avoid DivideByZeroException
                 }
 
-                foreach (var topic in purse.Value)
+                foreach (var topic in Wallet.Value)
                 {
                     topic.Sum = topic.Sum / sum * 100;
                 }
             }
 
-            foreach(var purse in allExpenses)
+            foreach(var Wallet in allExpenses)
             {
                 for (int i = 0; i < names.Count(); i++)
                 {
-                    if (!purse.Value.Any(p => p.Topic == names[i]))
+                    if (!Wallet.Value.Any(p => p.Topic == names[i]))
                     {
-                        purse.Value.Insert(i, new SumExpensesPerTopicDto() { Topic = names[i], Sum = 0 });
+                        Wallet.Value.Insert(i, new SumExpensesPerTopicDto() { Topic = names[i], Sum = 0 });
                     }
                 }
 
-                purse.Value.Sort((first, second) => first.Topic.CompareTo(second.Topic));
+                Wallet.Value.Sort((first, second) => first.Topic.CompareTo(second.Topic));
             }
 
             var percents = allExpenses.Select(e => new PercentsTopicExpenseDto() { CurrencyCode = e.Key, Percents = e.Value });

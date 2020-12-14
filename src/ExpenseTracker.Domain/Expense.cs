@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Domain.Purses;
+﻿using ExpenseTracker.Domain.Wallets;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,8 +7,8 @@ namespace ExpenseTracker.Domain
 {
     public class Expense : BaseEntity
     {
-        public int PurseId { get; set; }
-        public virtual Purse Purse { get; set; }
+        public int WalletId { get; set; }
+        public virtual Wallet Wallet { get; set; }
         public int? TopicId { get; set; }
         public virtual Topic Topic { get; set; }
         public string Title { get; set; }

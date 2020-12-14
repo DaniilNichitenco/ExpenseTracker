@@ -22,7 +22,7 @@ namespace ExpenseTracker.EFMapping
                 .HasForeignKey(e => e.OwnerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(u => u.Purses)
+            builder.HasMany(u => u.Wallets)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade);

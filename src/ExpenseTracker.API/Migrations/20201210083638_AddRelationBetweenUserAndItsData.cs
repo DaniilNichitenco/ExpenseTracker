@@ -29,8 +29,8 @@ namespace ExpenseTracker.API.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purses_OwnerId",
-                table: "Purses",
+                name: "IX_Wallets_OwnerId",
+                table: "Wallets",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
@@ -54,8 +54,8 @@ namespace ExpenseTracker.API.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Purses_Users_OwnerId",
-                table: "Purses",
+                name: "FK_Wallets_Users_OwnerId",
+                table: "Wallets",
                 column: "OwnerId",
                 principalSchema: "Auth",
                 principalTable: "Users",
@@ -92,8 +92,8 @@ namespace ExpenseTracker.API.Migrations
                 table: "Expenses");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Purses_Users_OwnerId",
-                table: "Purses");
+                name: "FK_Wallets_Users_OwnerId",
+                table: "Wallets");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Topics_Users_OwnerId",
@@ -112,8 +112,8 @@ namespace ExpenseTracker.API.Migrations
                 table: "Topics");
 
             migrationBuilder.DropIndex(
-                name: "IX_Purses_OwnerId",
-                table: "Purses");
+                name: "IX_Wallets_OwnerId",
+                table: "Wallets");
 
             migrationBuilder.DropIndex(
                 name: "IX_Expenses_OwnerId",

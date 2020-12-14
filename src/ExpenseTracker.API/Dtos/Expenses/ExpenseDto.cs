@@ -8,7 +8,7 @@ namespace ExpenseTracker.API.Dtos.Expenses
     public class ExpenseDto
     {
         public int Id { get; set; }
-        public int PurseId { get; set; }
+        public int WalletId { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public double Money

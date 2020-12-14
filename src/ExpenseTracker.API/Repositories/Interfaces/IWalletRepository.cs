@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Domain.Purses;
+﻿using ExpenseTracker.Domain.Wallets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.API.Repositories.Interfaces
 {
-    public interface IPurseRepository : IRepository<Purse>
+    public interface IWalletRepository : IRepository<Wallet>
     {
-        List<string> GetAvailablePurses(int userId);
+        List<string> GetAvailableWallets(int userId);
         int GetAllCurrenciesAmount();
     }
 }

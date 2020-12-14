@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExpenseTracker.Domain.Purses
+namespace ExpenseTracker.Domain.Wallets
 {
-    public abstract class Purse : BaseEntity
+    public abstract class Wallet : BaseEntity
     {
         double _bill;
         public double Bill

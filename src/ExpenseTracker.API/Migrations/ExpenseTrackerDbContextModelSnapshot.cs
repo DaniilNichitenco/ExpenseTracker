@@ -235,9 +235,6 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PurseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(40)")
@@ -246,53 +243,18 @@ namespace ExpenseTracker.API.Migrations
                     b.Property<int?>("TopicId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("PurseId");
 
                     b.HasIndex("TopicId");
 
+                    b.HasIndex("WalletId");
+
                     b.ToTable("Expenses");
-                });
-
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Bill")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CurrencyCode")
-                        .IsRequired()
-                        .HasColumnType("char(3)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Purses");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Purse");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Topic", b =>
@@ -350,25 +312,63 @@ namespace ExpenseTracker.API.Migrations
                     b.ToTable("UserInfos");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseEUR", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasDiscriminator().HasValue("PurseEUR");
+                    b.Property<double>("Bill")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("char(3)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Wallets");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Wallet");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseMDL", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletEUR", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
 
-                    b.HasDiscriminator().HasValue("PurseMDL");
+                    b.HasDiscriminator().HasValue("WalletEUR");
                 });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.PurseUSD", b =>
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletMDL", b =>
                 {
-                    b.HasBaseType("ExpenseTracker.Domain.Purses.Purse");
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
 
-                    b.HasDiscriminator().HasValue("PurseUSD");
+                    b.HasDiscriminator().HasValue("WalletMDL");
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.WalletUSD", b =>
+                {
+                    b.HasBaseType("ExpenseTracker.Domain.Wallets.Wallet");
+
+                    b.HasDiscriminator().HasValue("WalletUSD");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Auth.RoleClaim", b =>
@@ -430,23 +430,14 @@ namespace ExpenseTracker.API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ExpenseTracker.Domain.Purses.Purse", "Purse")
-                        .WithMany("Expenses")
-                        .HasForeignKey("PurseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ExpenseTracker.Domain.Topic", "Topic")
                         .WithMany("Expenses")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.NoAction);
-                });
 
-            modelBuilder.Entity("ExpenseTracker.Domain.Purses.Purse", b =>
-                {
-                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
-                        .WithMany("Purses")
-                        .HasForeignKey("OwnerId")
+                    b.HasOne("ExpenseTracker.Domain.Wallets.Wallet", "Wallet")
+                        .WithMany("Expenses")
+                        .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -464,6 +455,15 @@ namespace ExpenseTracker.API.Migrations
                     b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
                         .WithOne("UserInfo")
                         .HasForeignKey("ExpenseTracker.Domain.UserInfo", "OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Wallets.Wallet", b =>
+                {
+                    b.HasOne("ExpenseTracker.Domain.Auth.User", "User")
+                        .WithMany("Wallets")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

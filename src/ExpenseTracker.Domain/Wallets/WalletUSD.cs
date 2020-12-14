@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExpenseTracker.Domain.Purses
+namespace ExpenseTracker.Domain.Wallets
 {
-    public class PurseUSD : Purse
+    public class WalletUSD : Wallet
     {
-        public PurseUSD()
+        public WalletUSD()
         {
             CurrencyCode = "usd";
         }

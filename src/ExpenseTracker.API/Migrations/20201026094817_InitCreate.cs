@@ -113,7 +113,7 @@ namespace ExpenseTracker.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Purses",
+                name: "Wallets",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -126,9 +126,9 @@ namespace ExpenseTracker.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purses", x => x.Id);
+                    table.PrimaryKey("PK_Wallets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Purses_People_PersonId",
+                        name: "FK_Wallets_People_PersonId",
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -263,8 +263,8 @@ namespace ExpenseTracker.API.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purses_PersonId",
-                table: "Purses",
+                name: "IX_Wallets_PersonId",
+                table: "Wallets",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
@@ -323,7 +323,7 @@ namespace ExpenseTracker.API.Migrations
                 name: "Occasions");
 
             migrationBuilder.DropTable(
-                name: "Purses");
+                name: "Wallets");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims",

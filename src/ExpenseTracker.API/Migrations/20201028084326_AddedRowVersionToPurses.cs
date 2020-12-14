@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ExpenseTracker.API.Migrations
 {
-    public partial class AddedRowVersionToPurses : Migration
+    public partial class AddedRowVersionToWallets : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<byte[]>(
                 name: "RowVersion",
-                table: "Purses",
+                table: "Wallets",
                 rowVersion: true,
                 nullable: true);
         }
@@ -18,7 +18,7 @@ namespace ExpenseTracker.API.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "RowVersion",
-                table: "Purses");
+                table: "Wallets");
         }
     }
 }
