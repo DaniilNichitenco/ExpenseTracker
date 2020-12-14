@@ -12,6 +12,8 @@ namespace ExpenseTracker.API.Repositories.Interfaces
     public interface IRepository<TEntity> where TEntity : BaseEntity
     {
         Task<TEntity> Get(int id);
+        int Count(Expression<Func<TEntity, bool>> predicate);
+        int Count();
         Task<IEnumerable<TEntity>> GetAll();
         IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
         Task Add(TEntity entity);

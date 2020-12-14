@@ -76,10 +76,11 @@ namespace ExpenseTracker.API
         {
             List<Topic> topics = new List<Topic>()
             {
-                new Topic(){ Name = "Food", OwnerId = userId },
-                new Topic(){ Name = "Transport", OwnerId = userId },
-                new Topic(){ Name = "Amusement", OwnerId = userId },
-                new Topic(){ Name = "Others", OwnerId = userId },
+                new Topic(){ Name = "Others", OwnerId = null },
+                new Topic(){ Name = "Food", OwnerId = null },
+                new Topic(){ Name = "Transport", OwnerId = null },
+                new Topic(){ Name = "Health", OwnerId = null },
+                new Topic(){ Name = "Sport", OwnerId = userId }
         };
 
             await repository.AddRange(topics);
@@ -142,6 +143,12 @@ namespace ExpenseTracker.API
                     Date=new DateTime(2020, 6, 15), Money=100, PurseId=2, TopicId = 4 },
                 new Expense() { OwnerId = userId, Title="21 expense",
                     Date=new DateTime(2020, 6, 16), Money=100, PurseId=2, TopicId = 4 },
+                 new Expense() { OwnerId = userId, Title="22 expense",
+                    Date=new DateTime(2020, 12, 8), Money=100, PurseId=1, TopicId = 5 },
+                new Expense() { OwnerId = userId, Title="23 expense",
+                    Date=new DateTime(2020, 12, 9), Money=100, PurseId=2, TopicId = 5 },
+                new Expense() { OwnerId = userId, Title="24 expense",
+                    Date=new DateTime(2020, 12, 10), Money=100, PurseId=2, TopicId = 5 },
             };
 
             await repository.AddRange(expenses);
